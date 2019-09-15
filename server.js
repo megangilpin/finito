@@ -17,7 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Routes
-app.use("/auth", require("./routes/login.js"))
+app.use("/auth", require("./routes/loginRoute.js"))
+app.use("/notification", require("./routes/twilioRoute.js"))
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/public/index.html"));
