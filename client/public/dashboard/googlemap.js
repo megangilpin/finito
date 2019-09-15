@@ -86,13 +86,14 @@ function initMap() {
     });
 }
 
-var x = document.getElementById("demo");
+(document).ready(getLocation());
+
 
 function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(savePosition);
   } else {
-    x.innerHTML = "Geolocation is not supported by this browser.";
+    alert("Geolocation is not supported by this browser.");
   }
 }
 
