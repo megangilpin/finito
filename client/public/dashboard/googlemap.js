@@ -3,9 +3,29 @@ let currentLocation = {
   longitude: ""
 }
 
+// gets users location on page load
+$(document).ready(getLocation());
+
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(savePosition);
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+
+// Logs users location - to be used in the future to save users location to the server
+function savePosition(position) {
+  currentLocation.latitude = position.coords.latitude
+  currentLocation.longitude = position.coords.longitude
+
+  console.log(currentLocation)
+}
+
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: -33.8688, lng: 151.2195 },
+    center: { lat: 40.8309436, lng: -73.94648389999999 },
     zoom: 13
   });
   var card = document.getElementById('pac-card');
@@ -92,7 +112,7 @@ function initMap() {
 }
 
 // gets users location on page load
-(document).ready(getLocation());
+$(document).ready(getLocation());
 
 
 function getLocation() {
@@ -106,7 +126,7 @@ function getLocation() {
 // Logs users location - to be used in the future to save users location to the server
 function savePosition(position) {
   currentLocation.latitude = position.coords.latitude
-  currentLocation.longitude = position.coords.latitude
+  currentLocation.longitude = position.coords.longitude
 
   console.log(currentLocation) 
 }
