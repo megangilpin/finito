@@ -31,11 +31,12 @@
           password: $('#registerPassword').val()
         }
 
-        $.post("/register", register, (result) => { 
-          console.log(result)
+        $.post("/auth/register", register, (data) => { 
+          if (data.redirect) { 
+            window.location.href = data.redirect
+          }
         })
 
-      
       }); 
       
       $(document).on("click", "#login", (event) => {
@@ -45,11 +46,13 @@
           username: $('#loginUsername').val(),
           password: $('#loginPassword').val()
         }
+        console.log(login)
 
-        $.post("/login", login, (data) => { 
-          console.log(data)
+        $.post("/auth/signin", login, (data) => { 
+          if (data.redirect) { 
+            window.location.href = data.redirect
+          }
         })
-
       
       }) 
     </script>
