@@ -1,3 +1,8 @@
+let currentLocation = {
+  latitude: "",
+  longitude: ""
+}
+
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: -33.8688, lng: 151.2195 },
@@ -86,6 +91,7 @@ function initMap() {
     });
 }
 
+// gets users location on page load
 (document).ready(getLocation());
 
 
@@ -97,10 +103,10 @@ function getLocation() {
   }
 }
 
+// Logs users location - to be used in the future to save users location to the server
 function savePosition(position) {
-  const currentLocation = {
-    latitude: position.coords.latitude,
-    longitude: position.coords.latitude
-  }
+  currentLocation.latitude = position.coords.latitude
+  currentLocation.longitude = position.coords.latitude
+
   console.log(currentLocation) 
 }
