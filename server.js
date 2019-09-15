@@ -19,6 +19,11 @@ app.use(bodyParser.json());
 // Routes
 app.use("/auth", require("./routes/loginRoute.js"))
 app.use("/notification", require("./routes/twilioRoute.js"))
+app.use("/googlemap", require("./routes/googlemapRoute.js"))
+
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "./client/public/dashboard/index.html"));
+})
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/public/index.html"));
