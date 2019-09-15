@@ -21,7 +21,7 @@ const Register = () => {
                     <input className="w-100 form-control" type="password" id="registerPassword" name="password" required/>
                 </div>
             </div>
-            <div className="mt-4">
+            <div className="mt-4 pb-5">
                 <input className="btn btn-primary w-100" type="submit" id="register" value="Register" />
             </div>
         </>
