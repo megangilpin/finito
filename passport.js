@@ -10,7 +10,6 @@ passport.use(new JwtStrategy({
 }, async (payload, done) => { 
   try { 
     // Find user in JWT token 
-    console.log(payload.sub)
     const user = await db.User.findById(payload.sub);
     // If does not exist 
     if (!user) { 

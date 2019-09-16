@@ -1,21 +1,22 @@
-import React, { Component } from "react";
-import Login from "./components/Login/Login"
-import Register from "./components/Register/Register"
-import Notification from "./components/Notification/Notification"
+import React from "react";
 import "./App.css";
+import Main from "./components/Main/Main";
 
-class App extends Component {
-  render() {
-    return (
-      <>
-        <div className="container pt-5">
-          <Login /><br />
-          <Register /><br />
-          <Notification />
-        </div>
-      </>
-    );
-  }
+
+const App = () => {
+  return (
+    <>
+    
+    <div className="centered rounded border">
+      <div className="py-4 bg-dark">
+      <center>
+        <img src="/images/logo.png" width="100px" alt="Arryvl Logo" />
+      </center>
+      </div>
+      <Main />
+    </div>
+    </>
+  );
 }
 
 export default App;

@@ -1,132 +1,44 @@
-let currentLocation = {
-  latitude: "",
-  longitude: ""
+const currentLocation = {
+  latitude: null,
+  longitude: null
 }
 
-// gets users location on page load
-$(document).ready(getLocation());
+navigator.geolocation.getCurrentPosition(
+  (position) => {
+      currentLocation.latitude = parseFloat(position.coords.latitude);
+      currentLocation.longitude = parseFloat(position.coords.longitude);
+    }
+  );
 
-
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(savePosition);
-  } else {
-    alert("Geolocation is not supported by this browser.");
-  }
-}
-
-// Logs users location - to be used in the future to save users location to the server
-function savePosition(position) {
-  currentLocation.latitude = position.coords.latitude
-  currentLocation.longitude = position.coords.longitude
-
-  console.log(currentLocation)
-}
 
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: 40.8309436, lng: -73.94648389999999 },
-    zoom: 13
-  });
-  var card = document.getElementById('pac-card');
-  var input = document.getElementById('pac-input');
-  var types = document.getElementById('type-selector');
-  var strictBounds = document.getElementById('strict-bounds-selector');
-
-  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-  var autocomplete = new google.maps.places.Autocomplete(input);
-
-  // Bind the map's bounds (viewport) property to the autocomplete object,
-  // so that the autocomplete requests use the current map bounds for the
-  // bounds option in the request.
-  autocomplete.bindTo('bounds', map);
-
-  // Set the data fields to return when the user selects a place.
-  autocomplete.setFields(
-    ['address_components', 'geometry', 'icon', 'name']);
-
-  var infowindow = new google.maps.InfoWindow();
-  var infowindowContent = document.getElementById('infowindow-content');
-  infowindow.setContent(infowindowContent);
-  var marker = new google.maps.Marker({
-    map: map,
-    anchorPoint: new google.maps.Point(0, -29)
+  console.log(currentLocation)
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 5,
+    center: { lat: currentLocation.latitude, lng: currentLocation.longitude } 
   });
 
-  autocomplete.addListener('place_changed', function () {
-    infowindow.close();
-    marker.setVisible(false);
-    var place = autocomplete.getPlace();
-    if (!place.geometry) {
-      // User entered the name of a Place that was not suggested and
-      // pressed the Enter key, or the Place Details request failed.
-      window.alert("No details available for input: '" + place.name + "'");
-      return;
-    }
+  const plotLocation = [{ lat: currentLocation.latitude, lng: currentLocation.longitude }];
 
-    // If the place has a geometry, then present it on a map.
-    if (place.geometry.viewport) {
-      map.fitBounds(place.geometry.viewport);
-    } else {
-      map.setCenter(place.geometry.location);
-      map.setZoom(17);  // Why 17? Because it looks good.
-    }
-    marker.setPosition(place.geometry.location);
-    marker.setVisible(true);
+  setInterval(() => {
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        const { longitude, latitude } = position.coords
+        plotLocation.push(new google.maps.LatLng({lat: parseFloat(40.779776),lng: parseFloat(-73.94754560000001)}))
+        setInterval(() => { plotLocation.push(new google.maps.LatLng({lat:parseFloat(39.779776),lng:parseFloat(-73.94754560000001)})) }, 2000)
+        setInterval(() => { plotLocation.push(new google.maps.LatLng({lat:parseFloat(38.779776),lng:parseFloat(-73.94754560000001)})) }, 4000)
+        setInterval(() => { plotLocation.push(new google.maps.LatLng({lat:parseFloat(32.779776),lng:parseFloat(-73.94754560000001)})) }, 6000)
+        setInterval(() => { plotLocation.push(new google.maps.LatLng({lat:parseFloat(30.779776),lng:parseFloat(-73.94754560000001)})) }, 8000)
+        
+        // Redraw line on map using new coordinates array
+        const drawLine = new google.maps.Polyline({
+          path: plotLocation,
+          strokeColor: 'blue',
+          strokeOpacity: 1.0,
+          strokeWeight: 3
+        });
 
-    var address = '';
-    if (place.address_components) {
-      address = [
-        (place.address_components[0] && place.address_components[0].short_name || ''),
-        (place.address_components[1] && place.address_components[1].short_name || ''),
-        (place.address_components[2] && place.address_components[2].short_name || '')
-      ].join(' ');
-    }
-
-    infowindowContent.children['place-icon'].src = place.icon;
-    infowindowContent.children['place-name'].textContent = place.name;
-    infowindowContent.children['place-address'].textContent = address;
-    infowindow.open(map, marker);
-  });
-
-  // Sets a listener on a radio button to change the filter type on Places
-  // Autocomplete.
-  function setupClickListener(id, types) {
-    var radioButton = document.getElementById(id);
-    radioButton.addEventListener('click', function () {
-      autocomplete.setTypes(types);
-    });
-  }
-
-  setupClickListener('changetype-all', []);
-  setupClickListener('changetype-address', ['address']);
-  setupClickListener('changetype-establishment', ['establishment']);
-  setupClickListener('changetype-geocode', ['geocode']);
-
-  document.getElementById('use-strict-bounds')
-    .addEventListener('click', function () {
-      console.log('Checkbox clicked! New state=' + this.checked);
-      autocomplete.setOptions({ strictBounds: this.checked });
-    });
-}
-
-// gets users location on page load
-$(document).ready(getLocation());
-
-
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(savePosition);
-  } else {
-    alert("Geolocation is not supported by this browser.");
-  }
-}
-
-// Logs users location - to be used in the future to save users location to the server
-function savePosition(position) {
-  currentLocation.latitude = position.coords.latitude
-  currentLocation.longitude = position.coords.longitude
-
-  console.log(currentLocation) 
+        drawLine.setMap(map);
+    })
+  },100); 
 }

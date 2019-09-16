@@ -21,9 +21,19 @@
         $.post("/auth/register", register, (data) => { 
           if (data.redirect) { 
             window.location.href = data.redirect
+          } else {
+            let error = data.details[0].message
+            
+            $("#error").html("")
+            if (error === "\"username\" is not allowed to be empty" || error === "\"username\" must be a valid email") {
+              $("#error").html("Please enter a valid email address")
+            } else if (error === "\"password\" is not allowed to be empty") {
+              $("#error").html("Please enter a valid password")
+            } else { 
+              $("#error").html(error)
+            }
           }
         })
-
       }); 
       
       $(document).on("click", "#login", (event) => {
@@ -37,6 +47,8 @@
         $.post("/auth/signin", login, (data) => { 
           if (data.redirect) { 
             window.location.href = data.redirect
+          } else { 
+            //console.log(data)
           }
         })
       
