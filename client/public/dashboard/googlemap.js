@@ -153,22 +153,3 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 
-// gets users location on page load
-$(document).ready(getLocation());
-
-
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(savePosition);
-  } else {
-    alert("Geolocation is not supported by this browser.");
-  }
-}
-
-// Logs users location - to be used in the future to save users location to the server
-function savePosition(position) {
-  currentLocation.latitude = position.coords.latitude
-  currentLocation.longitude = position.coords.longitude
-
-  console.log(currentLocation) 
-}
