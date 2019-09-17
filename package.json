@@ -40,5 +40,13 @@
     "react-google-maps": "^9.4.5",
     "react-router-dom": "^5.0.1",
     "twilio": "^3.34.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/megangilpin/finito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/megangilpin/finito/issues"
+  },
+  "homepage": "https://github.com/megangilpin/finito#readme"
 }
