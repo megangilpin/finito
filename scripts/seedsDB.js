@@ -8,16 +8,31 @@ mongoose.connect(
   "mongodb://localhost/profiles"
 );
 
-const userSeed = [
-  {
-    name: "",
-    phoneNumber: "",
-    userName:"",
-      
-  },
-];
+const Users = [User1, User2, User2]
+var User = mongoose.model('User', profileSchema);
 
-const 
+var User1 = new User({
+    name: "Percy",
+    username: "Percy Jackson",
+    phoneNumber: "",
+    contacts:["Ryan", "Megan", "New Friend"]
+        });
+
+  var User2 = new User({
+    name: "Ryan",
+    username: "Ryan Gosling",
+    phoneNumber: "",
+    contacts:["Percy", "Megan", "New Friend"]
+  });.
+
+  var User3 = new User({
+    name: "Megan",
+    username: "Megan Fox",
+    phoneNumber: "",
+    contacts:["Percy", "Megan", "New Friend"]
+  };
+  const Users = [User1, User2, User2]
+
 
 db.User
   .remove({})
@@ -30,3 +45,5 @@ db.User
     console.error(err);
     process.exit(1);
   });
+
+

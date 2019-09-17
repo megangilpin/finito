@@ -22,6 +22,8 @@ const UserSchema = new Schema({
         ref: "SavedLocations"
     }]
   };
+   
+   
 
   // Before user is saved, run
   UserSchema.pre('save', async function(next) { 
