@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Map from '../components/Map/Map.js'
 import Jumbotron from "../components/Jumbotron";
 import { Col, Row, Container } from "../components/Grid";
+import Nav from "../components/Nav";
 
 
 class Google extends Component {
@@ -32,6 +33,7 @@ class Google extends Component {
   render() {
     return (
       <Container fluid>
+        <Nav />
         <Jumbotron>
           <Row>
             <Col size="md-8">
