@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
-import Main from "./components/Main/Main";
+import Main from "./pages/Login.js";
 import Google from "./pages/Map";
 
 function App() {
