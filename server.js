@@ -11,7 +11,7 @@ const app = express();
 
 // Define middleware here
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/public"));
+  app.use(express.static(path.join(__dirname, "client", "build")));
 }
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -21,12 +21,8 @@ app.use("/auth", require("./routes/loginRoute.js"))
 app.use("/notification", require("./routes/twilioRoute.js"))
 app.use("/googlemap", require("./routes/googlemapRoute.js"))
 
-app.get("/dashboard", (req, res) => {
-  res.sendFile(path.join(__dirname, "./client/public/dashboard/index.html"));
-})
-
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./client/public/index.html"));
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 })
 
 app.listen(PORT, () => {

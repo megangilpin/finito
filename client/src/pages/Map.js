@@ -1,74 +1,94 @@
-import React, { Component } from "react";
-import Map from '../components/Map/Map.js'
-import Jumbotron from "../components/Jumbotron";
+import React from 'react';
+import { withGoogleMap, withScriptjs, GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col, Row, Container } from "../components/Grid";
-import Nav from "../components/Nav";
+import Notification from "../components/Notification/Notification";
 
 
-class Google extends Component {
+class Map extends React.Component {
   state = {
-    latitude: "",
-    longitude: ""
-  };
-  
-  currentPosition = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.setState({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          })
+    progress: [],
+    loading: true
+  }
 
-        });
-    } else {
-      alert("Geolocation is not supported by this browser.");
+  initialLocation = () => { 
+    const getPosition = function (options) {
+      return new Promise(function (resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject, options);
+      });
+    }
+    
+    getPosition()
+      .then((position) => {
+        const { latitude, longitude } = position.coords
+
+        this.setState({ 
+          progress: [{lat: latitude, lng: longitude}],
+          loading: false
+        })
+        this.watchPosition()
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  }
+
+  watchPosition = () => {
+    navigator.geolocation.watchPosition(
+      (position) => {
+        let location = this.state.progress.concat({lat:position.coords.latitude,lng:position.coords.longitude})
+        this.setState({ progress: location })
+      }
+    )
+  }
+  
+  componentDidMount = () => { 
+    this.initialLocation()
+  }
+  
+  render() {
+    const { loading, progress } = this.state;
+    console.log(progress)
+    // Check if we have a position, if not, do not load map
+    if (loading) {
+      return null;
+    }
+      return (
+        <GoogleMap
+          defaultZoom={16}
+          defaultCenter={{lat:progress[0].lat, lng:progress[0].lng}}
+          >
+            { this.state.progress && (
+              <>
+                {/* Set path */}
+                <Polyline path={progress} options={{ strokeColor: "#FF0000 "}} />
+                {/* Set marker to last known location */}
+                <Marker position={progress[progress.length - 1]} />
+              </>
+            )}
+        </GoogleMap>
+      )
     }
   }
 
-  componentDidMount() {
-    this.currentPosition()
-  }
 
-  render() {
-    return (
-      <Container fluid>
-        <Nav />
-        <Jumbotron>
-          <Row>
-            <Col size="md-8">
-              <Map
-                id="myMap"
-                options={{
-                  center: { lat: this.state.latitude, lng: this.state.longitude },
-                  zoom: 8
-                }}
-                onMapLoad={map => {
-                    new window.google.maps.Marker({
-                    position: { lat: 40.8075, lng: -73.9626 },
-                    map: map,
-                    // title: 'Hello Istanbul!'
-                  });
-                    new window.google.maps.Marker({
-                    position: { lat: 40.7295, lng: -73.9965 },
-                    map: map,
-                    // title: 'Hello Istanbul!'
-                  });
-                }}
-              />
-            </Col>
-            <Col size="md-4">
-              <h1>Arryvl</h1>
-              <h3>Search for your destination</h3>
-              <p> Current Lat : {this.state.latitude}</p>
-              <p> Current Long: {this.state.longitude}</p>
-            </Col>
-          </Row>
-        </Jumbotron>
-      </Container>
-    );
-  }
-}
+const MapComponent = withScriptjs(withGoogleMap(Map))
 
-export default Google;
-
+export default () => (
+  <Container fluid>
+    <Row> 
+      <Col size="md-10 xs-12">
+        <MapComponent
+          googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={<div style={{ height: `100%`, width: '100%' }} />}
+          mapElement={<div style={{ height: `100%` }} />}
+        />
+      </Col>
+     
+      
+      <Col size="md-2 xs-12">
+        <Notification />
+      </Col>
+    </Row>
+  </Container>
+)

@@ -3,30 +3,34 @@ import "./Login.css";
 
 const Login = () => {
     return (
-        <>
-            <h1 className="py-4">Login</h1>
-            <form action="/login" method="post">
+        <div className="px-5 py-5 row">
+            <div className="col">
                 <div className="row">
-                    <div className="col-1 py-2">
-                        <label>Username:</label>
+                    <div className="col">
+                        <label>Email:</label>
                     </div>
-                    <div className="col-11">
+                </div>
+                <div className="row">
+                    <div className="col">
                         <input className="w-100 form-control mb-2" type="text" id="loginUsername" name="username" required/>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-1 py-2">
+                    <div className="col">
                         <label>Password:</label>
                     </div>
-                    <div className="col-11">
+                </div>
+                <div className="row">
+                    <div className="col">
                         <input className="w-100 form-control" type="password" id="loginPassword" name="password" required/>
                     </div>
                 </div>
-                <div className="mt-4 mb-5">
+                <div className="mt-4">
                     <input className="btn btn-primary w-100" type="submit" id="login" value="Log In"/>
                 </div>
-            </form>
-        </>
+                <div id="error" className="py-2 text-danger text-center"></div> 
+            </div>
+        </div>
     );
 }
 

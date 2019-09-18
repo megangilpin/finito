@@ -2,7 +2,6 @@ const JWT = require("jsonwebtoken")
 const db = require("../models")
 
 signToken = (user) => { 
-    console.log(user)
     return JWT.sign({ 
         iss: "Arryvl", 
         sub: user._id, 
@@ -13,13 +12,12 @@ signToken = (user) => {
 
 module.exports = { 
     register: async (req, res, next) => {
-        console.log(req)
         const { username, password } = req.value.body; 
         // Check if username exists
         const duplicateUsername =  await db.User.findOne({ username }); 
 
         if (duplicateUsername) { 
-            return res.status(409).send({ error: "Username exists. Try another." })
+            return res.json({ details: [ { message: "Username exists. Try another." } ] })
         }
         
         // Create username
@@ -27,11 +25,12 @@ module.exports = {
         await newUser.save();
 
         signToken(newUser)
-        res.status(200).send({ redirect: "/dashboard" })
+        console.log(newUser._id)
+        res.status(200).json({ redirect: "/dashboard"})
     }, 
     signIn: async (req, res, next) => { 
         signToken(req.user)
-        res.status(200).send({ redirect: "/dashboard" })
+        res.status(200).json({ redirect: "/dashboard" })
     }, 
     secret: async (req, res, next) => { 
         res.json({ secret: "Secret approved" })
