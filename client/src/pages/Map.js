@@ -1,6 +1,8 @@
 import React from 'react';
 import { withGoogleMap, withScriptjs, GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col, Row, Container } from "../components/Grid";
+import Notification from "../components/Notification/Notification";
+
 
 class Map extends React.Component {
   state = {
@@ -45,14 +47,15 @@ class Map extends React.Component {
   
   render() {
     const { loading, progress } = this.state;
+    console.log(progress)
     // Check if we have a position, if not, do not load map
     if (loading) {
       return null;
     }
       return (
         <GoogleMap
-          defaultZoom={5}
-          defaultCenter={{lat:39.0921017, lng:-94.7158009}}
+          defaultZoom={16}
+          defaultCenter={{lat:progress[0].lat, lng:progress[0].lng}}
           >
             { this.state.progress && (
               <>
@@ -73,16 +76,18 @@ const MapComponent = withScriptjs(withGoogleMap(Map))
 export default () => (
   <Container fluid>
     <Row> 
-      <Col size="md-10">
+      <Col size="md-10 xs-12">
         <MapComponent
           googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div style={{ height: `100%`, width: '100%' }} />}
-          mapElement={<div style={{ height: `1000px` }} />}
+          mapElement={<div style={{ height: `100%` }} />}
         />
       </Col>
-      <Col size="md-2">
-        Arryvl
+     
+      
+      <Col size="md-2 xs-12">
+        <Notification />
       </Col>
     </Row>
   </Container>
