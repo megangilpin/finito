@@ -5,74 +5,68 @@ import { Col, Row, Container } from "../components/Grid";
 class Map extends React.Component {
   state = {
     progress: [],
+    loading: true
   }
 
   initialLocation = () => { 
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
+    const getPosition = function (options) {
+      return new Promise(function (resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject, options);
+      });
     }
-
-    const error = {
-
-    }
-
-    if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(
-        (position) => {
-          this.setState([{
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          }])
-        }, error, options)
-    } else {
-      alert("Geolocation is not supported by this browser.");
-    }
-  }
-
-  getLocation = () => {
-      console.log('intitial',this.state.progress)
-      window.setInterval(() => {
-        navigator.geolocation.watchPosition(
-          (position) => {
-            let location = this.state.progress.concat({lat:position.coords.latitude,lng:position.coords.longitude})
-            this.setState({ progress: location })
-            setTimeout(()=>{console.log('added',this.state.progress)},5000)
-          }
-
-        )}
-      ,1000); 
-  }
-
-  componentDidMount = () => { 
-    if(this.state.progress.length === 1) { 
-      // Set initial location if none exists
-      this.initialLocation()
-    } 
-      // Start logging locations
-      this.getLocation()
     
+    getPosition()
+      .then((position) => {
+        const { latitude, longitude } = position.coords
+
+        this.setState({ 
+          progress: [{lat: latitude, lng: longitude}],
+          loading: false
+        })
+        this.watchPosition()
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
   }
-  
-  render = () => {
-    return (
-      <GoogleMap
-        defaultZoom={5}
-        defaultCenter={{lat:39.0921017, lng:-94.7158009}}
-        >
-          { this.state.progress && (
-            <>
-              {/* Set path */}
-              <Polyline path={this.state.progress} options={{ strokeColor: "#FF0000 "}} />
-              {/* Set marker to last known location */}
-              <Marker position={this.state.progress[this.state.progress.length - 1]} />
-            </>
-          )}
-      </GoogleMap>
+
+  watchPosition = () => {
+    navigator.geolocation.watchPosition(
+      (position) => {
+        let location = this.state.progress.concat({lat:position.coords.latitude,lng:position.coords.longitude})
+        this.setState({ progress: location })
+      }
     )
   }
-}
+  
+  componentDidMount = () => { 
+    this.initialLocation()
+  }
+  
+  render() {
+    const { loading, progress } = this.state;
+    // Check if we have a position, if not, do not load map
+    if (loading) {
+      return null;
+    }
+      return (
+        <GoogleMap
+          defaultZoom={5}
+          defaultCenter={{lat:39.0921017, lng:-94.7158009}}
+          >
+            { this.state.progress && (
+              <>
+                {/* Set path */}
+                <Polyline path={progress} options={{ strokeColor: "#FF0000 "}} />
+                {/* Set marker to last known location */}
+                <Marker position={progress[progress.length - 1]} />
+              </>
+            )}
+        </GoogleMap>
+      )
+    }
+  }
+
 
 const MapComponent = withScriptjs(withGoogleMap(Map))
 
