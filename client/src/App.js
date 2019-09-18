@@ -1,22 +1,21 @@
 import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Main from "./components/Main/Main";
+import Google from "./pages/Map";
 
-
-const App = () => {
+function App() {
   return (
-    <>
-    
-    <div className="centered rounded border">
-      <div className="py-4 bg-dark">
-      <center>
-        <img src="/images/logo.png" width="100px" alt="Arryvl Logo" />
-      </center>
+    <Router>
+      <div>
+        <Switch>
+          <Route exact path="/" component={Main} />
+          <Route exact path="/dashboard" component={Google} />
+        </Switch>
       </div>
-      <Main />
-    </div>
-    </>
+    </Router>
   );
 }
 
 export default App;
+
