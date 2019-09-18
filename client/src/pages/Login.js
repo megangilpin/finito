@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Loginbar from "../components/Loginbar/Loginbar";
+import Loginbar from "../components/LoginOrRegister/LoginOrRegister";
 import Login from "../components/Login/Login";
 import Register from "../components/Register/Register";
 
