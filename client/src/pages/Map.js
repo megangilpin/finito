@@ -2,13 +2,19 @@ import React from 'react';
 import { withGoogleMap, withScriptjs, GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col, Row, Container } from "../components/Grid";
 import Notification from "../components/Notification/Notification";
+import Transportation from '../components/Transportation/Transportation';
 
 
 class Map extends React.Component {
   state = {
     progress: [],
-    loading: true
+    loading: true, 
+    transportationMethod: "Car"
   }
+
+  handleTransportationMethod = method => {
+    this.setState({ transportationMethod: method });
+  };
 
   initialLocation = () => { 
     const getPosition = function (options) {
@@ -47,7 +53,7 @@ class Map extends React.Component {
   
   render() {
     const { loading, progress } = this.state;
-    console.log(progress)
+    
     // Check if we have a position, if not, do not load map
     if (loading) {
       return null;
@@ -60,9 +66,9 @@ class Map extends React.Component {
             { this.state.progress && (
               <>
                 {/* Set path */}
-                <Polyline path={progress} options={{ strokeColor: "#FF0000 "}} />
+                <Polyline path={this.state.progress} options={{ strokeColor: "#FF0000 "}} />
                 {/* Set marker to last known location */}
-                <Marker position={progress[progress.length - 1]} />
+                <Marker position={this.state.progress[this.state.progress.length - 1]} />
               </>
             )}
         </GoogleMap>
@@ -87,7 +93,11 @@ export default () => (
      
       
       <Col size="md-2 xs-12">
-        <Notification />
+        <Transportation /> 
+        <Notification 
+          transportationMethod={this.state.transportationMethod}
+          handleTransportationMethod={this.handleTransportationMethod}
+        />
       </Col>
     </Row>
   </Container>
