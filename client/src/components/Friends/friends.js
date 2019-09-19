@@ -10,12 +10,12 @@ const Friends = () => {
             <form>
                 <div class="form-group">
                     <label for="">Name</label>
-                    <input type="User" class="form-control" id="exampleInputEmail1" aria-describedby="" placeholder="Enter name"/>
-                    <small id="emailHelp" class="form-text text-muted"></small>
+                    <input type="User" class="form-control" id="" aria-describedby="" placeholder="Enter name"/>
+                    <small id="" class="form-text text-muted"></small>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword1"></label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"/>
+                    <label for="">Phone Number</label>
+                    <input type="phoneNumber" class="form-control" id="" placeholder="Enter Phone Number Here"/>
                 </div>
                 <div class="form-check">  
                     </div>
