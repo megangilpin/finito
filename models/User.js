@@ -13,15 +13,15 @@ const UserSchema = new Schema({
         type: String, 
         required: true 
     },
-    profile: [{
+    profile: {
         type: Schema.Types.ObjectId,
         ref: "Profile"
-    }]
-    savedLocations:[{
+    },
+    savedLocations:{
         type: Schema.Types.ObjectId,
         ref: "SavedLocations"
-    }]
-  };
+    }
+  });
    
    
 
