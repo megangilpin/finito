@@ -12,7 +12,6 @@ const UserSchema = new Schema({
     password: { 
         type: String, 
         required: true 
-<<<<<<< HEAD
     },
     profile: {
         type: Schema.Types.ObjectId,
@@ -25,10 +24,6 @@ const UserSchema = new Schema({
   });
    
    
-=======
-    }
-  });
->>>>>>> a921aa8ae564199a799051ed858ed60ac43f24cf
 
   // Before user is saved, run
   UserSchema.pre('save', async function(next) { 
