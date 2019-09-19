@@ -4,7 +4,6 @@ const db = require("../models")
 module.exports = { 
     message: (req, res) => { 
         const to = req.body.phone;
-
         client.messages
       .create({
          body: 'Hello there!',

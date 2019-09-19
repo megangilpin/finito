@@ -1,12 +1,16 @@
 {
   "name": "mern",
   "version": "0.1.0",
-  "description": "Mern Demo",
+  "description": "Arryvl",
   "private": true,
   "proxy": "http://localhost:3001/",
   "dependencies": {
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
+<<<<<<< HEAD
+=======
+    "react-google-maps": "^9.4.5",
+>>>>>>> a921aa8ae564199a799051ed858ed60ac43f24cf
     "react-router-dom": "^5.0.1",
     "react-scripts": "^2.1.1"
   },

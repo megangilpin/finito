@@ -1,72 +1,43 @@
-import React, { Component } from "react";
-import Map from '../components/Map/Map.js'
-import Jumbotron from "../components/Jumbotron";
+import React from 'react';
+import { withGoogleMap, withScriptjs, GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col, Row, Container } from "../components/Grid";
+import Notification from "../components/Notification/Notification";
+import Nav from "../components/Nav/"
+import Main from "../components/Main"
+import Map from "../components/Map"
 
 
-class Google extends Component {
+class Home extends React.Component {
   state = {
-    latitude: "",
-    longitude: ""
-  };
+    progress: [],
+    loading: true,
+    page:"Home"
+  }
   
-  currentPosition = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.setState({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          })
-
-        });
-    } else {
-      alert("Geolocation is not supported by this browser.");
-    }
-  }
-
-  componentDidMount() {
-    this.currentPosition()
-  }
-
   render() {
-    return (
-      <Container fluid>
-        <Jumbotron>
+    const MapComponent = withScriptjs(withGoogleMap(Map))
+      return (
+        <div>
+          {console.log(this.state)}
+          <Nav
+            page={this.state.page}
+          />
           <Row>
-            <Col size="md-8">
-              <Map
-                id="myMap"
-                options={{
-                  center: { lat: this.state.latitude, lng: this.state.longitude },
-                  zoom: 8
-                }}
-                onMapLoad={map => {
-                    new window.google.maps.Marker({
-                    position: { lat: 40.8075, lng: -73.9626 },
-                    map: map,
-                    // title: 'Hello Istanbul!'
-                  });
-                    new window.google.maps.Marker({
-                    position: { lat: 40.7295, lng: -73.9965 },
-                    map: map,
-                    // title: 'Hello Istanbul!'
-                  });
-                }}
+            <Col size="md-10 xs-12">
+              <MapComponent
+                googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+                loadingElement={<div style={{ height: `100%` }} />}
+                containerElement={<div style={{ height: `100%`, width: '100%' }} />}
+                mapElement={<div style={{ height: `100%` }} />}
               />
             </Col>
-            <Col size="md-4">
-              <h1>Arryvl</h1>
-              <h3>Search for your destination</h3>
-              <p> Current Lat : {this.state.latitude}</p>
-              <p> Current Long: {this.state.longitude}</p>
+            <Col size="md-2 xs-12">
+              <Notification />
             </Col>
           </Row>
-        </Jumbotron>
-      </Container>
-    );
+        </div>
+      )
   }
 }
 
-export default Google;
-
+export default Home

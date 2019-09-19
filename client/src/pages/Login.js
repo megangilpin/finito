@@ -1,21 +1,43 @@
 import React, { Component } from "react";
-import Login from "../components/Login/Login"
-import Register from "../components/Register/Register"
-import Notification from "../components/Notification/Notification"
-import "./Login.css";
+import Loginbar from "../components/LoginOrRegister/LoginOrRegister";
+import Login from "../components/Login/Login";
+import Register from "../components/Register/Register";
 
-class Landing extends Component {
-  render() {
-    return (
-      <>
-        <div className="container pt-5">
-          <Login /><br />
-          <Register /><br />
-          <Notification />
-        </div>
-      </>
-    );
-  }
-}
+class Main extends Component {
+    state = {
+      currentPage: "Login"
+    };
+  
+    handlePageChange = page => {
+      this.setState({ currentPage: page });
+    };
+  
+    renderPage = () => {
+      if (this.state.currentPage === "Login") {
+        return <Login />;
+      } else { 
+        return <Register />
+      }
+    };
+  
+    render() {
+        return (
+          <>
+            <div className="centered rounded border">
+              <div className="py-4 bg-dark">
+                <center>
+                <img src="/images/logo.png" width="100px" alt="Arryvl Logo" />
+              </center>
+            </div>
+              <Loginbar
+                currentPage={this.state.currentPage}
+                handlePageChange={this.handlePageChange}
+              />
+              {this.renderPage()}
+            </div>
+          </>
+        );
+    };
+};
 
-export default Landing;
+export default Main;

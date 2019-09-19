@@ -1,30 +1,7 @@
-// import React, { Component } from "react";
-// import Login from "./components/Login/Login";
-// import Register from "./components/Register/Register";
-// import Notification from "./components/Notification/Notification";
-// import "./App.css";
-// import Map from './components/Map/Map.js'
-
-
-
-// export class App extends Component {
-//   render() {
-//     return (
-//         <div className="container pt-5">
-//           <Login /><br />
-//           <Register /><br />
-//           <Notification />
-//           <Map />
-//         </div>
-//     );
-//   }
-// }
-
-// export default App;
-
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Login from "./pages/Login";
+import "./App.css";
+import Main from "./pages/Login.js";
 import Google from "./pages/Map";
 
 function App() {
@@ -32,8 +9,8 @@ function App() {
     <Router>
       <div>
         <Switch>
-          <Route exact path="/" component={Login} />
-          <Route exact path="/map" component={Google} />
+          <Route exact path="/" component={Main} />
+          <Route exact path="/dashboard" component={Google} />
         </Switch>
       </div>
     </Router>
