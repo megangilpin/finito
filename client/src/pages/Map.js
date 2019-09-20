@@ -3,25 +3,47 @@ import { withGoogleMap, withScriptjs, GoogleMap, Polyline, Marker } from 'react-
 import { Col, Row, Container } from "../components/Grid";
 import Notification from "../components/Notification/Notification";
 import Nav from "../components/Nav/"
-import Main from "../components/Main"
 import Map from "../components/Map"
+import Sidebar from "../components/Sidebar"
+import Backdrop from "../components/Backdrop"
 
-
+ 
 class Home extends React.Component {
   state = {
     progress: [],
     loading: true,
-    page:"Home"
+    page:"Home",
+    sidebarOpen: false,
   }
   
+ sidebarToggleHandler = () => {
+    this.setState((prevState) => ({
+      sidebarOpen: !prevState.sidebarOpen
+    }));
+  };
+
+  backdropClickHandler = () => {
+    this.setState({sidebarOpen: false})
+  }
+
+
   render() {
     const MapComponent = withScriptjs(withGoogleMap(Map))
-      return (
-        <div>
+    let backdrop;
+
+    if (this.state.sidebarOpen) {
+      
+      backdrop = <Backdrop onClick={this.backdropClickHandler}/>
+    }
+    return (
+        <div style={{height: "100%"}}>
           {console.log(this.state)}
+          <Sidebar show={this.state.sidebarOpen}/>
           <Nav
             page={this.state.page}
+            sidebarToggleHandler={this.sidebarToggleHandler}
           />
+        {backdrop}
           <Row>
             <Col size="md-10 xs-12">
               <MapComponent
@@ -35,6 +57,7 @@ class Home extends React.Component {
               <Notification />
             </Col>
           </Row>
+
         </div>
       )
   }
