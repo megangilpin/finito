@@ -1,7 +1,7 @@
 import React from 'react';
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
 
-class Map extends React.PureComponent {
+class Map extends React.Component {
   state = {
     progress: [],
     loading: true
@@ -14,20 +14,19 @@ class Map extends React.PureComponent {
       });
     }
 
-    getPosition()
-      .then((position) => {
+    getPosition().then((position) => {
         const { latitude, longitude } = position.coords
-
-        this.setState({
-          progress: [{ lat: latitude, lng: longitude }],
-          loading: false
-        })
-        this.watchPosition()
-      })
-      .catch((err) => {
-        console.error(err.message);
-      });
-  }
+        
+        if (position) {
+          this.setState({
+            progress: [{ lat: latitude, lng: longitude }],
+            loading: false
+          });
+          // Start watching location
+          this.watchPosition()
+        }    
+    }); 
+ }
 
   watchPosition = () => {
     navigator.geolocation.watchPosition(
