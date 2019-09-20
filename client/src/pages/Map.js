@@ -1,7 +1,7 @@
 import React from 'react';
 import { withGoogleMap, withScriptjs } from 'react-google-maps';
 import { Col, Row } from "../components/Grid";
-import { Input } from "../components/Form";
+import Address from "../components/Address/Address";
 import Notification from "../components/Notification/Notification";
 import TransportationMethodButton from "../components/Transportation/Transportation";
 import Nav from "../components/Nav/"
@@ -26,28 +26,7 @@ const Home = () => {
           </Col>
           <Col size="md-2 xs-12">
             <TransportationMethodButton />
-
-            <div className="row mx-3"> 
-              <div className="col">
-                <label><strong>Destination</strong></label>
-              </div>
-            </div>
-
-            <div className="form-row mx-4">
-              <div className="col-md-12 col-xs-12 pt-2"> 
-                <Input className="form-control no-gutters" id="address" placeholder="Address" /> 
-              </div>
-            </div>
-    
-            <div className="form-row mx-4">
-              <div className="col">
-                <Input className="form-control no-gutters" id="city" placeholder="City" /> 
-              </div>
-              <div className="col">
-                <Input className="form-control no-gutters" id="zip" placeholder="Zip" /> 
-              </div>
-            </div>
-
+            <Address />
             <Notification />
           </Col>
         </Row>

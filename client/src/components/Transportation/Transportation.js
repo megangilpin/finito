@@ -9,7 +9,6 @@ state = {
 
 handleTransportationMethod = method => {
     this.setState({ transportationMethod: method });
-    console.log(this.state)
 };
 
 render() {

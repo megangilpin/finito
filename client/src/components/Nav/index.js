@@ -25,7 +25,7 @@ function Nav(props) {
       <div className="navbar navbar-dark bg-dark box-shadow">
         <div className="container d-flex justify-content-between navTitle">
           <a href="#a" className="navbar-brand d-flex align-items-center">
-            <span><i className="icon mr-2 {}"></i></span><strong>{props.page}</strong>
+            <span><i className="icon mr-2 {}"></i></span><strong>Home</strong>
           </a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
