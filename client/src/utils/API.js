@@ -5,6 +5,6 @@ import axios from "axios";
 export default {
   getGeocode: function (address) {
     console.log(address)
-    return axios.get("/googlemap/geocode", address);
+    return axios.post("/googlemap/geocode", address);
   }
 };
