@@ -17,7 +17,12 @@ module.exports = {
     res.json(mapURL)
   },
   geocode: (req, res) => {
-    const address = req.body
+    const address = {
+      address: "3692 Broadway",
+      city: "New York",
+      state: "New York"
+    }
+    console.log(req.body)
     let geocodeAddress = []
     // req.body should look like this 
   // {   
