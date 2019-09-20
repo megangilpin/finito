@@ -7,7 +7,7 @@ const sideBar = props => {
     drawerClasses = "side-bar open";
   }
   return ( <nav className={drawerClasses}>
-
+  
     <ul>
       <li><p href="/">Friends</p></li>
       <li><p href="/">Destinations</p></li>
@@ -16,4 +16,4 @@ const sideBar = props => {
   );
 };
 
-export default sideBar; 
+export default sideBar;
