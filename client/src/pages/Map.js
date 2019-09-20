@@ -1,15 +1,13 @@
 import React from 'react';
-import { withGoogleMap, withScriptjs, GoogleMap, Polyline, Marker } from 'react-google-maps';
-import { Col, Row, Container } from "../components/Grid";
+import { withGoogleMap, withScriptjs } from 'react-google-maps';
+import { Col, Row } from "../components/Grid";
+import Address from "../components/Address/Address";
 import Notification from "../components/Notification/Notification";
-import Map from "../components/Map";
+import TransportationMethodButton from "../components/Transportation/Transportation";
+import Map from "../components/Map"
 import Tabs from "./Sidebar"
 
-
 const Home = () => {
-  
-
-
     const MapComponent = withScriptjs(withGoogleMap(Map))
     return (
         <div style={{height: "100%"}}>
@@ -24,12 +22,13 @@ const Home = () => {
               />
             </Col>
             <Col size="md-2 xs-12">
+              <TransportationMethodButton />
+              <Address />
               <Notification />
             </Col>
           </Row>
         </div>
       )
-  }
-
+    }
 
 export default Home

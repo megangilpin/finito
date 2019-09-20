@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row, Container } from "../components/Grid";
+// import { Col, Row, Container } from "../components/Grid";
 import Nav from "../components/Nav/";
 import Sidebar from "../components/Sidebar";
 import Backdrop from "../components/Backdrop";
@@ -25,9 +25,7 @@ class Tabs extends React.Component {
     this.setState({ sidebarOpen: false })
   }
 
-
   getGeocode = () => {
-
     let address = {
         address: "3692 Broadway",
         city: "New York",
@@ -53,7 +51,7 @@ class Tabs extends React.Component {
 
   render() {
     let backdrop;
-
+    console.log(this.state)
     if (this.state.sidebarOpen) {
 
       backdrop = <Backdrop onClick={this.backdropClickHandler} />

@@ -6,7 +6,6 @@ import "./friends.css";
 const Friends = () => {
     return (
         <>
-
             <form>
                 <div class="form-group">
                     <label for="">Name</label>
@@ -21,7 +20,6 @@ const Friends = () => {
                     </div>
                 <button type="save" class="btn btn-primary">Save</button>
             </form>
-
         </>
     );
 }
