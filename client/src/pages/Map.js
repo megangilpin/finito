@@ -2,48 +2,18 @@ import React from 'react';
 import { withGoogleMap, withScriptjs, GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col, Row, Container } from "../components/Grid";
 import Notification from "../components/Notification/Notification";
-import Nav from "../components/Nav/"
-import Map from "../components/Map"
-import Sidebar from "../components/Sidebar"
-import Backdrop from "../components/Backdrop"
+import Map from "../components/Map";
+import Tabs from "./Sidebar"
 
- 
-class Home extends React.Component {
-  state = {
-    progress: [],
-    loading: true,
-    page:"Home",
-    sidebarOpen: false,
-  }
+
+const Home = () => {
   
- sidebarToggleHandler = () => {
-    this.setState((prevState) => ({
-      sidebarOpen: !prevState.sidebarOpen
-    }));
-  };
-
-  backdropClickHandler = () => {
-    this.setState({sidebarOpen: false})
-  }
 
 
-  render() {
     const MapComponent = withScriptjs(withGoogleMap(Map))
-    let backdrop;
-
-    if (this.state.sidebarOpen) {
-      
-      backdrop = <Backdrop onClick={this.backdropClickHandler}/>
-    }
     return (
         <div style={{height: "100%"}}>
-          {console.log(this.state)}
-          <Sidebar show={this.state.sidebarOpen}/>
-          <Nav
-            page={this.state.page}
-            sidebarToggleHandler={this.sidebarToggleHandler}
-          />
-        {backdrop}
+          <Tabs />
           <Row>
             <Col size="md-10 xs-12">
               <MapComponent
@@ -57,10 +27,9 @@ class Home extends React.Component {
               <Notification />
             </Col>
           </Row>
-
         </div>
       )
   }
-}
+
 
 export default Home
