@@ -6,15 +6,15 @@ import Notification from "../components/Notification/Notification";
 import TransportationMethodButton from "../components/Transportation/Transportation";
 import Nav from "../components/Nav/"
 import Map from "../components/Map"
+// import Sidebar from "../components/Sidebar"
+// import Backdrop from "../components/Backdrop"
 
 
 const Home = () => { 
   const MapComponent = withScriptjs(withGoogleMap(Map))
     return (
       <div>
-        <Nav
-          
-        />
+        <Nav />
         <Row>
           <Col size="md-10 xs-12">
             <MapComponent
