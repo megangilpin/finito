@@ -1,0 +1,19 @@
+.logo {
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 1px;
+  color: #F95738;
+};
+
+.basic {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.main {
+  background-color: #083D77;
+  height: 500px;
+}
+
+.logoIcon{
+  width: 15%;
+  height: 15%;
+}

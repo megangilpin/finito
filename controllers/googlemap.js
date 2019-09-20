@@ -31,7 +31,7 @@ module.exports = {
         geocodeAddress.push(address[item].replace(/\s/g, '+'))
     })
     console.log(geocodeAddress)
-    src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0]+ ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=" + key
+    src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0] + ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=" + key
     console.log(src)
     axios
       .get(src)

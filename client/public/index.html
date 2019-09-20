@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
       <!-- jQuery -->
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800|Space+Mono:400,700&display=swap"
+        rel="stylesheet">
+      
     <script> 
       $(document).on("click", "#register", (event) => {
         event.preventDefault()
@@ -21,6 +24,7 @@
 
         $.post("/auth/register", register, (data) => { 
           if (data.redirect) { 
+            localStorage.setItem('user', data.user);
             window.location.href = data.redirect
           } else {
             let error = data.details[0].message
@@ -47,26 +51,30 @@
 
         $.post("/auth/signin", login, (data) => { 
           if (data.redirect) { 
+            localStorage.setItem('user', data.user);
             window.location.href = data.redirect
           } else { 
             //console.log(data)
           }
         })
-      
-      }) 
+      }); 
 
       $(document).on("click", "#notification", (event) => {
         event.preventDefault()
-      
-        const phone = { phone: $("#phoneNumber").val() }
+        let phone = $("#phoneNumber").val()
+        phone = phone.replace(/-|\+|\ |\-|\(|\)/g,'')
         
-        $.post("/notification/text", phone, (data) => { 
-          if (data) { 
-            console.log(data)
-          }
-        })
-
+        if((isNaN(phone) || phone.length === 0) || (phone.length > 11 || phone.length < 10)) { 
+          $("#error").html("")
+          $("#error").html("Please enter a valid US phone number.")
+        } else {
+          $("#error").html("")
+          $.post("/notification/text", {phone: phone}, (data) => { 
+          console.log(data)
+          })
+        }
       }); 
+
     </script>
     <style>
 
@@ -77,6 +85,12 @@
       You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"
+    integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
+    
   </body>
 
 </html>

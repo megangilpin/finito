@@ -1,33 +1,36 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import "./Nav.css";
 
-function Nav() {
+function Nav(props) {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-danger">
-      <p class="mb-0 p-3">Google Book Search</p>
-      <div className="collapse navbar-collapse">
-        <ul className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <Link
-              to="/"
-              className={
-                window.location.pathname === "/" || window.location.pathname === "/about"
-                  ? "nav-link active"
-                  : "nav-link"
-              }
-            >
-              Search
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              to="/saved"
-              className={window.location.pathname === "/saved" ? "nav-link active" : "nav-link"}
-            >
-              Saved Books
-            </Link>
-          </li>
-        </ul>
+    <nav className="sticky-top">
+      <div className="collapse bg-dark" id="navbarHeader">
+        <div className="container">
+        <div className="row">
+          <div className="col-sm-8 col-md-7 py-4">
+            <h4 className="text-white">About</h4>
+            <p className="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
+          </div>
+          <div className="col-sm-4 offset-md-1 py-4">
+            <h4 className="text-white">Contact</h4>
+            <ul className="list-unstyled">
+              <li><a href="#a" className="text-white">Follow on Twitter</a></li>
+              <li><a href="#a" className="text-white">Like on Facebook</a></li>
+              <li><a href="#a" className="text-white">Email me</a></li>
+            </ul>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div className="navbar navbar-dark bg-dark box-shadow">
+        <div className="container d-flex justify-content-between navTitle">
+          <a href="#a" className="navbar-brand d-flex align-items-center">
+            <span><i className="icon mr-2 {}"></i></span><strong>{props.page}</strong>
+          </a>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+        </div>
       </div>
     </nav>
   );

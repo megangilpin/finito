@@ -1,104 +1,75 @@
 import React from 'react';
-import { withGoogleMap, withScriptjs, GoogleMap, Polyline, Marker } from 'react-google-maps';
-import { Col, Row, Container } from "../components/Grid";
+import { withGoogleMap, withScriptjs } from 'react-google-maps';
+import { Col, Row } from "../components/Grid";
+import { Input } from "../components/Form";
 import Notification from "../components/Notification/Notification";
-import Transportation from '../components/Transportation/Transportation';
+import TransportationMethodButton from "../components/Transportation/Transportation";
+import Nav from "../components/Nav/"
+import Map from "../components/Map"
 
 
-class Map extends React.Component {
+class Home extends React.Component {
   state = {
     progress: [],
-    loading: true, 
-    transportationMethod: "Car"
+    loading: true,
+    transportationMethod: "Car",
+    page: "Home"
   }
 
   handleTransportationMethod = method => {
     this.setState({ transportationMethod: method });
   };
-
-  initialLocation = () => { 
-    const getPosition = function (options) {
-      return new Promise(function (resolve, reject) {
-        navigator.geolocation.getCurrentPosition(resolve, reject, options);
-      });
-    }
-    
-    getPosition()
-      .then((position) => {
-        const { latitude, longitude } = position.coords
-
-        this.setState({ 
-          progress: [{lat: latitude, lng: longitude}],
-          loading: false
-        })
-        this.watchPosition()
-      })
-      .catch((err) => {
-        console.error(err.message);
-      });
-  }
-
-  watchPosition = () => {
-    navigator.geolocation.watchPosition(
-      (position) => {
-        let location = this.state.progress.concat({lat:position.coords.latitude,lng:position.coords.longitude})
-        this.setState({ progress: location })
-      }
-    )
-  }
-  
-  componentDidMount = () => { 
-    this.initialLocation()
-  }
   
   render() {
-    const { loading, progress } = this.state;
-    
-    // Check if we have a position, if not, do not load map
-    if (loading) {
-      return null;
-    }
+    const MapComponent = withScriptjs(withGoogleMap(Map))
       return (
-        <GoogleMap
-          defaultZoom={16}
-          defaultCenter={{lat:progress[0].lat, lng:progress[0].lng}}
-          >
-            { this.state.progress && (
-              <>
-                {/* Set path */}
-                <Polyline path={this.state.progress} options={{ strokeColor: "#FF0000 "}} />
-                {/* Set marker to last known location */}
-                <Marker position={this.state.progress[this.state.progress.length - 1]} />
-              </>
-            )}
-        </GoogleMap>
+        <div>
+          <Nav
+            page={this.state.page}
+          />
+          <Row>
+            <Col size="md-10 xs-12">
+              <MapComponent
+                googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+                loadingElement={<div style={{ height: `100%` }} />}
+                containerElement={<div style={{ height: `100%`, width: '100%' }} />}
+                mapElement={<div style={{ height: `100%` }} />}
+              />
+            </Col>
+            <Col size="md-2 xs-12">
+
+              <TransportationMethodButton
+                transportationMethod={this.state.transportationMethod}
+                handleTransportationMethod={this.handleTransportationMethod}
+              />
+
+              <div className="row mx-3"> 
+                <div className="col">
+                  <label><strong>Destination</strong></label>
+                </div>
+              </div>
+
+              <div className="form-row mx-4">
+                <div className="col-md-12 col-xs-12 pt-2"> 
+                  <Input className="form-control no-gutters" id="address" placeholder="Address" /> 
+                </div>
+              </div>
+      
+              <div className="form-row mx-4">
+                <div className="col">
+                  <Input className="form-control no-gutters" id="city" placeholder="City" /> 
+                </div>
+                <div className="col">
+                  <Input className="form-control no-gutters" id="zip" placeholder="Zip" /> 
+                </div>
+              </div>
+
+              <Notification />
+            </Col>
+          </Row>
+        </div>
       )
     }
   }
 
-
-const MapComponent = withScriptjs(withGoogleMap(Map))
-
-export default () => (
-  <Container fluid>
-    <Row> 
-      <Col size="md-10 xs-12">
-        <MapComponent
-          googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-          loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div style={{ height: `100%`, width: '100%' }} />}
-          mapElement={<div style={{ height: `100%` }} />}
-        />
-      </Col>
-     
-      
-      <Col size="md-2 xs-12">
-        <Transportation /> 
-        <Notification 
-          transportationMethod={this.state.transportationMethod}
-          handleTransportationMethod={this.handleTransportationMethod}
-        />
-      </Col>
-    </Row>
-  </Container>
-)
+export default Home

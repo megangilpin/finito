@@ -5,15 +5,15 @@ const Transportation = (props) => {
     return (
         <> 
             <div className="m-3">
-                <div className="border button mx-3 no-gutters rounded row">
-                    <div className={props.transportationMethod === "Foot" ? "bg-dark border-right col-4 text-center" : "border-right col-4 text-center"}> 
-                        <a href="#" onClick={() => props.handleTransportationMethod("Foot")}>Foot</a>
+                <div className="button mx-3 no-gutters rounded row" id="transportationMethod">
+                    <div onClick={() => props.handleTransportationMethod("Foot")} className={props.transportationMethod === "Foot" ? "selected col-4 rounded-left text-center active" : "bg-light col-4 rounded-left text-center"}> 
+                        Foot
                     </div>
-                    <div className={props.transportationMethod === "Bike" ? "bg-dark col-4 text-center" : "col-4 text-center"}> 
-                            <a href="#" onClick={() => props.handleTransportationMethod("Bike")}>Bike</a>
+                    <div onClick={() => props.handleTransportationMethod("Bike")} className={props.transportationMethod === "Bike" ? "selected col-4 text-center active" : "bg-light col-4 text-center"}> 
+                        Bike
                     </div>
-                    <div className={props.transportationMethod === "Car" ? "bg-dark border-left col-4 text-center" : ""}> 
-                        <a href="#" onClick={() => props.handleTransportationMethod("Car")}>Car</a>
+                    <div onClick={() => props.handleTransportationMethod("Car")} className={props.transportationMethod === "Car" ? "selected col-4 rounded-right text-center active" : "bg-light col-4 rounded-right text-center"}> 
+                        Car
                     </div>
                 </div>  
             </div>
