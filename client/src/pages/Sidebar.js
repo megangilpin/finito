@@ -39,9 +39,6 @@ class Tabs extends React.Component {
           sidebarToggleHandler={this.sidebarToggleHandler}
         />
         {backdrop}
-        {/* <div>
-          <button type="button" onClick={this.getGeocode} class="btn btn-dark">Dark</button>
-        </div> */}
 
       </div>
     )
