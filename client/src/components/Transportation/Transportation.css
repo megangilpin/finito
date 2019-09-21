@@ -1,0 +1,13 @@
+.button {
+    height: 35px;
+    line-height: 35px
+}
+
+.selected, .selected a {
+    background: #FF5722;
+    color: #FFF
+}
+
+#transportationMethod { 
+    cursor: pointer;
+}

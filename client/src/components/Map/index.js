@@ -4,7 +4,7 @@ import { GoogleMap, Polyline, Marker } from 'react-google-maps';
 class Map extends React.Component {
   state = {
     progress: [],
-    loading: true,
+    loading: true
   }
 
   initialLocation = () => {
@@ -14,20 +14,19 @@ class Map extends React.Component {
       });
     }
 
-    getPosition()
-      .then((position) => {
+    getPosition().then((position) => {
         const { latitude, longitude } = position.coords
-
-        this.setState({
-          progress: [{ lat: latitude, lng: longitude }],
-          loading: false
-        })
-        this.watchPosition()
-      })
-      .catch((err) => {
-        console.error(err.message);
-      });
-  }
+        
+        if (position) {
+          this.setState({
+            progress: [{ lat: latitude, lng: longitude }],
+            loading: false
+          });
+          // Start watching location
+          this.watchPosition()
+        }    
+    }); 
+ }
 
   watchPosition = () => {
     navigator.geolocation.watchPosition(
@@ -42,11 +41,9 @@ class Map extends React.Component {
     this.initialLocation()
   }
 
- 
-
   render() {
     const { loading, progress } = this.state;
-    console.log(progress)
+
     // Check if we have a position, if not, do not load map
     if (loading) {
       return null;

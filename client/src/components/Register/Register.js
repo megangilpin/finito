@@ -17,7 +17,7 @@ const Register = () => {
                 </div>
                 <div className="row">
                     <div className="col">
-                        <label>Password</label>
+                        <label>Password:</label>
                     </div>
                 </div>
                 <div className="row">

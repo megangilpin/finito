@@ -26,11 +26,11 @@ module.exports = {
 
         signToken(newUser)
         console.log(newUser._id)
-        res.status(200).json({ redirect: "/dashboard"})
+        res.status(200).json({ user: req.user._id, redirect: "/dashboard"})
     }, 
     signIn: async (req, res, next) => { 
         signToken(req.user)
-        res.status(200).json({ redirect: "/dashboard" })
+        res.status(200).json({ user: req.user._id, redirect: "/dashboard" })
     }, 
     secret: async (req, res, next) => { 
         res.json({ secret: "Secret approved" })

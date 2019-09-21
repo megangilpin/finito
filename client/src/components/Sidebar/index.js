@@ -9,7 +9,7 @@ const sideBar = props => {
   return ( <nav className={drawerClasses}>
     <div className="py-4 bg-dark">
       <center>
-        <img src="/images/logo.png" width="100px" alt="Arryvl Logo" />
+        <img src="/images/logo.png" width="80px" alt="Arryvl Logo" />
       </center>
     </div>
     <ul>

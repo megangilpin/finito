@@ -1,11 +1,17 @@
-import React from "react";
+//input box for your address
+//input box for city
+//input box state
+//Save button
 
-// This file exports the Input, TextArea, and FormBtn components
+import React from "react";
+import "./destinations.css";
+
+//Add Destination  section
 
 export function Input(props) {
   return (
     <div className="form-group">
-      <input {...props} />
+      <input className="form-control" {...props} />
     </div>
   );
 }
@@ -25,3 +31,7 @@ export function FormBtn(props) {
     </button>
   );
 }
+
+    
+
+export default Destinations;

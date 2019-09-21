@@ -6,4 +6,4 @@ const SidebarButton = props => (
   </button>
 );
 
-export default SidebarButton
+export default SidebarButton 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Loginbar from "../components/LoginOrRegister/LoginOrRegister";
+import LoginOrRegister from "../components/LoginOrRegister/LoginOrRegister";
 import Login from "../components/Login/Login";
 import Register from "../components/Register/Register";
 
@@ -29,7 +29,7 @@ class Main extends Component {
                 <img src="/images/logo.png" width="100px" alt="Arryvl Logo" />
               </center>
             </div>
-              <Loginbar
+              <LoginOrRegister
                 currentPage={this.state.currentPage}
                 handlePageChange={this.handlePageChange}
               />

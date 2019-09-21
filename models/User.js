@@ -12,8 +12,18 @@ const UserSchema = new Schema({
     password: { 
         type: String, 
         required: true 
+    },
+    profile: {
+        type: Schema.Types.ObjectId,
+        ref: "Profile"
+    },
+    savedLocations:{
+        type: Schema.Types.ObjectId,
+        ref: "SavedLocations"
     }
   });
+   
+   
 
   // Before user is saved, run
   UserSchema.pre('save', async function(next) { 

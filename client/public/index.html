@@ -24,6 +24,7 @@
 
         $.post("/auth/register", register, (data) => { 
           if (data.redirect) { 
+            localStorage.setItem('user', data.user);
             window.location.href = data.redirect
           } else {
             let error = data.details[0].message
@@ -50,26 +51,30 @@
 
         $.post("/auth/signin", login, (data) => { 
           if (data.redirect) { 
+            localStorage.setItem('user', data.user);
             window.location.href = data.redirect
           } else { 
             //console.log(data)
           }
         })
-      
-      }) 
+      }); 
 
       $(document).on("click", "#notification", (event) => {
         event.preventDefault()
-      
-        const phone = { phone: $("#phoneNumber").val() }
+        let phone = $("#phoneNumber").val()
+        phone = phone.replace(/-|\+|\ |\-|\(|\)/g,'')
         
-        $.post("/notification/text", phone, (data) => { 
-          if (data) { 
-            console.log(data)
-          }
-        })
-
+        if((isNaN(phone) || phone.length === 0) || (phone.length > 11 || phone.length < 10)) { 
+          $("#error").html("")
+          $("#error").html("Please enter a valid US phone number.")
+        } else {
+          $("#error").html("")
+          $.post("/notification/text", {phone: phone}, (data) => { 
+          console.log(data)
+          })
+        }
       }); 
+
     </script>
     <style>
 
