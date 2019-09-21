@@ -1,7 +1,6 @@
 .side-bar {
   height: 100%;
   background: white;
-  box-shadow: 1px 0px 7px rgba(0,0,0, 0.5);
   position: fixed;
   top: 0;
   left: 0;
@@ -17,7 +16,7 @@
 }
 
 .side-bar ul{
-  height: 100%;
+  margin-top: 50px;
   list-style: none;
   display: inline-flex;
   flex-direction: column;
