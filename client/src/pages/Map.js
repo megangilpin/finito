@@ -14,8 +14,9 @@ const Home = () => {
     return (
         <div style={{height: "100%"}}>
           <Tabs />
+          <Container >
           <Row>
-            <Col size="md-10 xs-12">
+            <Col size="md-12 xs-12">
               <MapComponent
                 googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
                 loadingElement={<div style={{ height: `100%` }} />}
@@ -23,10 +24,11 @@ const Home = () => {
                 mapElement={<div style={{ height: `100%` }} />}
               />
             </Col>
-            <Col size="md-2 xs-12">
+            <Col size="md-12 xs-12">
               <Notification />
             </Col>
           </Row>
+        </Container>
         </div>
       )
   }
