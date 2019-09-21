@@ -11,7 +11,7 @@ const Home = () => {
     const MapComponent = withScriptjs(withGoogleMap(Map))
     return (
         <div style={{height: "100%"}}>
-          <Tabs />
+        <Tabs />
           <Container >
           <Row>
             <Col size="md-12 xs-12">
@@ -22,7 +22,7 @@ const Home = () => {
                 mapElement={<div style={{ height: `100%` }} />}
               />
             </Col>
-            <Col size="md-2 xs-12">
+            <Col size="md-12 xs-12">
               <TransportationMethodButton />
               <Address />
               <Notification />
