@@ -1,11 +1,10 @@
 import React from 'react';
 import { withGoogleMap, withScriptjs } from 'react-google-maps';
 import { Col, Row, Container} from "../components/Grid";
-import Address from "../components/Address/Address";
-import Notification from "../components/Notification/Notification";
-import TransportationMethodButton from "../components/Transportation/Transportation";
 import Map from "../components/Map"
 import Tabs from "./Sidebar"
+import Destinations from "./Destinations"
+
 
 const Home = () => {
     const MapComponent = withScriptjs(withGoogleMap(Map))
@@ -22,11 +21,7 @@ const Home = () => {
                 mapElement={<div style={{ height: `100%` }} />}
               />
             </Col>
-            <Col size="md-12 xs-12">
-              <TransportationMethodButton />
-              <Address />
-              <Notification />
-            </Col>
+            {/* <Destinations /> */}
           </Row>
         </Container>
         </div>
