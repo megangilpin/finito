@@ -1,8 +1,7 @@
 import React from "react"
 import { Input } from "../Form";
 
-class Address extends React.Component { 
-  render() {
+const Address = () => { 
     return (
         <>
             <div className="row"> 
@@ -13,21 +12,20 @@ class Address extends React.Component {
 
             <div className="form-row">
               <div className="col-md-12 col-xs-12 pt-2"> 
-                <Input className="form-control no-gutters" forwardref="address" placeholder="Address" /> 
+                <Input className="form-control no-gutters" placeholder="Address" /> 
               </div>
             </div>
     
             <div className="form-row">
               <div className="col">
-                <Input className="form-control no-gutters" forwardref="city" placeholder="City" /> 
+                <Input className="form-control no-gutters" placeholder="City" /> 
               </div>
               <div className="col">
-                <Input className="form-control no-gutters" forwardref="state" placeholder="State" /> 
+                <Input className="form-control no-gutters"  placeholder="State" /> 
               </div>
             </div>
         </>
     )
-}
 }
 
 export default Address

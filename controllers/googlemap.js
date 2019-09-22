@@ -31,7 +31,7 @@ module.exports = {
     let tripId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     // Create a new trip
     const newTrip = await new db.Trip({destinationAddress: results[0].formatted_address, destinationCoords: {lat: results[0].geometry.location.lat, lng: results[0].geometry.location.lng}, tripId})
-    newTrip.save().then(results => console.log(results))
+    newTrip.save()
 
     // Send geolocation results up to the client so the destination can be plotted
     await res.json({results,tripId})
