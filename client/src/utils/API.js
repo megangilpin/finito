@@ -4,7 +4,10 @@ import axios from "axios";
 // It accepts a "query" or term to search the recipe api for
 export default {
   getGeocode: function (address) {
-    console.log('api', address)
     return axios.post("/googlemap/geocode", address);
-  }
+  },
+  // Saves a trip to the database
+  updateTrip: (tripId, progress) => {
+    return axios.post("/googlemap/updateTrip", {tripId, progress});
+  }  
 };

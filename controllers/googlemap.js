@@ -17,21 +17,9 @@ module.exports = {
     res.json(mapURL)
   },
   geocode: (req, res) => {
-<<<<<<< HEAD
-  let geocodeAddress = [];
-
-  const address = {
-    address: req.body.address.address,
-    city: req.body.address.city,
-    state: req.body.address.state
-  }
-  console.log(address)
-  
-=======
     console.log(req.body)
     const address = req.body.address
     let geocodeAddress = []
->>>>>>> 61e02c1862616cc425dbc6f615d6e6a5c28fceb5
   // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
     Object.keys(address).forEach((item) => {
         geocodeAddress.push(address[item].replace(/\s/g, '+'))
