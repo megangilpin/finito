@@ -172,8 +172,4 @@ class Destinations extends Component {
   }
 }
 
-<<<<<<< HEAD
-export default Destination;
-=======
 export default Destinations;
->>>>>>> 61e02c1862616cc425dbc6f615d6e6a5c28fceb5
