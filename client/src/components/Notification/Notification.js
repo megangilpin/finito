@@ -4,7 +4,7 @@ import "./Notification.css";
 const Notification = () => {
     return (
         <>
-            <div className="row mx-3">
+            <div className="row">
                 <div className="col-md-12 col-xs-12 pt-4">
                     <label><strong>Contact</strong></label>
                 </div>

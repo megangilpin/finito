@@ -1,6 +1,6 @@
 import React from 'react';
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
-import { Col, Row, Container } from "../Grid";
+import { Col } from "../Grid";
 import TransportationMethodButton from "../Transportation/Transportation";
 import Address from "../Address/Address";
 import Notification from "../Notification/Notification";
@@ -30,7 +30,6 @@ class Map extends React.Component {
             loading: false
           });
           // Start watching location
-          this.watchPosition()
         }    
     }); 
  }
@@ -45,12 +44,14 @@ class Map extends React.Component {
   }
 
   getGeocode = () => {
+    console.log(this.refs)
     let address = {
-      address: "3692 Broadway",
-      city: "New York",
-      state: "New York"
+      address: 123,
+      city: 1,
+      state: 1
     }
-    console.log(address)
+    this.watchPosition()
+    
     API.getGeocode({
       address
     })
@@ -82,31 +83,29 @@ class Map extends React.Component {
     
     return (
       <div>
-
-            <Col size="md-12 xs-12">
-      <GoogleMap
-        defaultZoom={16}
-        defaultCenter={{ lat: progress[0].lat, lng: progress[0].lng }}
-      >
-        {this.state.progress && (
-          <>
-            {/* Set path */}
-            <Polyline path={progress} options={{ strokeColor: "#FF0000 " }} />
-            {/* Set marker to last known location */}
-            <Marker position={progress[progress.length - 1]} />
-          </>
-        )}
-      </GoogleMap>
-      </Col>
-            <Col size="md-12 xs-12">
-      <TransportationMethodButton />
-              <Address />
-              <Notification />
+        <Col size="md-12 xs-12">
+          <GoogleMap
+            defaultZoom={16}
+            defaultCenter={{ lat: progress[0].lat, lng: progress[0].lng }}
+          >
+            {this.state.progress && (
+              <>
+                {/* Set path */}
+                <Polyline path={progress} options={{ strokeColor: "#FF0000 " }} />
+                {/* Set marker to last known location */}
+                <Marker position={progress[progress.length - 1]} />
+              </>
+            )}
+          </GoogleMap>
+        </Col>
+        <Col size="md-12 xs-12">
+          <TransportationMethodButton />
+          <Address />
+          <Notification />
           <div>
-          <button type="button" onClick={this.getGeocode} className="btn btn-dark">Get Geocode</button>
-        </div>
-            </Col>
-
+            <button type="button" onClick={this.getGeocode} className="btn btn-dark">Get Geocode</button>
+          </div>
+        </Col>
       </div>
     )
   }

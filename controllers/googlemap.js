@@ -17,20 +17,14 @@ module.exports = {
     res.json(mapURL)
   },
   geocode: (req, res) => {
-    console.log(req.body)
-    // const address = {
-    //   address: "3692 Broadway",
-    //   city: "New York",
-    //   state: "New York"
-    // }
-    // console.log(req.body)
-    let geocodeAddress = []
-    // req.body should look like this 
-  // {   
-    //  "address": "3692 Broadway",
-  //    "city": "New York",
-  //    "state": "New York"
-  // }
+  let geocodeAddress = [];
+
+  const address = {
+    address: req.body.address.address,
+    city: req.body.address.city,
+    state: req.body.address.state
+  }
+  console.log(address)
   
   // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
     Object.keys(address).forEach((item) => {
@@ -40,7 +34,7 @@ module.exports = {
     src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0] + ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=" + key
     console.log(src)
     axios
-      .get(src)
+      .post(src)
       .then(({ data: { results } }) => res.json(results))
       .catch(err => res.status(422).json(err));
   }

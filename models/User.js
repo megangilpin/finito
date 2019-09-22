@@ -17,13 +17,11 @@ const UserSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Profile"
     },
-    savedLocations:{
+    trips:{
         type: Schema.Types.ObjectId,
-        ref: "SavedLocations"
+        ref: "Trip"
     }
   });
-   
-   
 
   // Before user is saved, run
   UserSchema.pre('save', async function(next) { 
