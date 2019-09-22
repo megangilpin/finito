@@ -21,7 +21,7 @@ const Address = () => {
                 <Input className="form-control no-gutters" id="city" placeholder="City" /> 
               </div>
               <div className="col">
-                <Input className="form-control no-gutters" id="zip" placeholder="Zip" /> 
+                <Input className="form-control no-gutters" id="state" placeholder="State" /> 
               </div>
             </div>
         </>

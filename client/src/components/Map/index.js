@@ -1,10 +1,17 @@
 import React from 'react';
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
+import { Col, Row, Container } from "../Grid";
+import TransportationMethodButton from "../Transportation/Transportation";
+import Address from "../Address/Address";
+import Notification from "../Notification/Notification";
+import API from "../../utils/API";
 
 class Map extends React.Component {
   state = {
     progress: [],
-    loading: true
+    loading: true,
+    googleAddress: "",
+    geocodeLocation: [],
   }
 
   initialLocation = () => {
@@ -37,6 +44,30 @@ class Map extends React.Component {
     )
   }
 
+  getGeocode = () => {
+    let address = {
+      address: "3692 Broadway",
+      city: "New York",
+      state: "New York"
+    }
+    console.log(address)
+    API.getGeocode({
+      address
+    })
+      .then(res => {
+        if (res.data.status === "error") {
+          throw new Error(res.data.message);
+        }
+        this.setState(() => ({
+          googleAddress: res.data[0].formatted_address,
+          geocodeLocation: [parseFloat(res.data[0].geometry.location.lat), parseFloat(res.data[0].geometry.location.lng)]
+        }));
+        console.log("Address from google: " + this.state.googleAddress)
+        console.log("New address: " + this.state.geocodeLocation)
+      })
+      .catch(err => console.log(err));
+  }
+
   componentDidMount = () => {
     this.initialLocation()
   }
@@ -50,6 +81,9 @@ class Map extends React.Component {
     }
     
     return (
+      <div>
+
+            <Col size="md-12 xs-12">
       <GoogleMap
         defaultZoom={16}
         defaultCenter={{ lat: progress[0].lat, lng: progress[0].lng }}
@@ -63,6 +97,17 @@ class Map extends React.Component {
           </>
         )}
       </GoogleMap>
+      </Col>
+            <Col size="md-12 xs-12">
+      <TransportationMethodButton />
+              <Address />
+              <Notification />
+          <div>
+          <button type="button" onClick={this.getGeocode} className="btn btn-dark">Get Geocode</button>
+        </div>
+            </Col>
+
+      </div>
     )
   }
 }
