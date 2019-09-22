@@ -1,4 +1,4 @@
-// const key = process.env.GOOGLEMAP;
+const key = process.env.GOOGLEMAP;
 const db = require("../models")
 const axios = require("axios");
 
@@ -17,6 +17,7 @@ module.exports = {
     res.json(mapURL)
   },
   geocode: (req, res) => {
+<<<<<<< HEAD
   let geocodeAddress = [];
 
   const address = {
@@ -26,6 +27,11 @@ module.exports = {
   }
   console.log(address)
   
+=======
+    console.log(req.body)
+    const address = req.body.address
+    let geocodeAddress = []
+>>>>>>> 61e02c1862616cc425dbc6f615d6e6a5c28fceb5
   // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
     Object.keys(address).forEach((item) => {
         geocodeAddress.push(address[item].replace(/\s/g, '+'))
