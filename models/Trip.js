@@ -8,6 +8,15 @@ const TripSchema = new Schema({
     progress: { 
         type: Array
     },
+    destinationAddress: { 
+        type: String
+    }, 
+    destinationCoords: { 
+        type: Array
+    },
+    tripId: { 
+        type: String
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: "User"
