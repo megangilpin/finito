@@ -4,24 +4,24 @@ import { Input } from "../Form";
 const Address = () => { 
     return (
         <>
-            <div className="row mx-3"> 
+            <div className="row"> 
               <div className="col">
                 <label><strong>Address</strong></label>
               </div>
             </div>
 
-            <div className="form-row mx-4">
+            <div className="form-row">
               <div className="col-md-12 col-xs-12 pt-2"> 
-                <Input className="form-control no-gutters" id="address" placeholder="Address" /> 
+                <Input className="form-control no-gutters" id="address" placeholder="Address (required)" /> 
               </div>
             </div>
     
-            <div className="form-row mx-4">
+            <div className="form-row">
               <div className="col">
-                <Input className="form-control no-gutters" id="city" placeholder="City" /> 
+                <Input className="form-control no-gutters" id="city" placeholder="City (required)" /> 
               </div>
               <div className="col">
-                <Input className="form-control no-gutters" id="state" placeholder="State" /> 
+                <Input className="form-control no-gutters" id="state" placeholder="State (required)" /> 
               </div>
             </div>
         </>

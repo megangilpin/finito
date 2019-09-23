@@ -10,7 +10,7 @@ class Users extends Component {
   state = {
     name: [],
     phoneNumber: "",
-};
+  };
 
   componentDidMount() {
     this.loadUser ();
