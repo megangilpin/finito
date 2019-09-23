@@ -6,5 +6,9 @@ export default {
   getGeocode: function (address) {
     console.log(address)
     return axios.post("/googlemap/geocode", address);
+  },
+  // Saves a trip to the database
+  updateTrip: function (progress) {
+    return axios.post("/googlemap/updateTrip", progress);
   }
 };

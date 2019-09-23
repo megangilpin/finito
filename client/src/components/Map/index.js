@@ -17,6 +17,7 @@ class Map extends React.Component {
     searchCity: "",
     st: "",
     searchAddress: "",
+    user_id: ""
   }
 
   initialLocation = () => {
@@ -52,6 +53,7 @@ class Map extends React.Component {
   // gets the Lat and Long from the google API
   getGeocode = () => {
     let address = {
+      user_id: this.state.user_id,
       address: this.state.searchAddress.trim(),
       city: this.state.searchCity.trim(),
       state: this.state.st.trim()
