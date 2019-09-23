@@ -30,17 +30,17 @@ module.exports = {
     .then(async ({ data: { results } }) => {
     let tripId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     // Create a new trip
-    const newTrip = await new db.Trip({destinationAddress: results[0].formatted_address, destinationCoords: {lat: results[0].geometry.location.lat, lng: results[0].geometry.location.lng}, tripId})
-    newTrip.save()
+    const newTrip = await new db.Trip({destinationAddress: results[0].formatted_address, destinationCoords: {lat: results[0].geometry.location.lat, lng: results[0].geometry.location.lng}, tripId, userId:""})
+    await newTrip.save()
 
     // Send geolocation results up to the client so the destination can be plotted
-    await res.json({results,tripId})
+    res.json({results,tripId})
     })
   }, 
   updateTrip: async (req, res) => { 
     await db.Trip.findOneAndUpdate(
       {tripId: req.body.tripId}, 
-      {$addToSet: {progress: req.body.progress}},
+      {$addToSet: {progress: req.body.progress}, $set: {userId: req.body.userId}}
     ).then(results => (console.log(results)))
   }
 };

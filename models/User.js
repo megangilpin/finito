@@ -12,14 +12,6 @@ const UserSchema = new Schema({
     password: { 
         type: String, 
         required: true 
-    },
-    profile: {
-        type: Schema.Types.ObjectId,
-        ref: "Profile"
-    },
-    trips:{
-        type: Schema.Types.ObjectId,
-        ref: "Trip"
     }
   });
 

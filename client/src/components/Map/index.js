@@ -39,10 +39,11 @@ class Map extends React.Component {
   watchPosition = (tripId) => {
     navigator.geolocation.watchPosition(
       (position) => {
-        let location = this.state.progress.concat({ lat: position.coords.latitude, lng: position.coords.longitude })
+        let location = this.state.progress.concat({ lat: position.coords.latitude, lng: position.coords.longitude });
+        const userId = localStorage.getItem('user');
         this.setState({ progress: location })
-        // Save to mongo so it can be reproduced for friend looking to track location
-        API.updateTrip(tripId, location)
+        // Save each watchPosition update to mongo so it can be reproduced for friend looking to track location
+        API.updateTrip(tripId, location, userId)
       }
     )
   }
