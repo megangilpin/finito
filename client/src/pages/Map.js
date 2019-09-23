@@ -3,7 +3,7 @@ import { withGoogleMap, withScriptjs } from 'react-google-maps';
 import { Col, Row, Container} from "../components/Grid";
 import Map from "../components/Map"
 import Tabs from "./Sidebar"
-import Destinations from "./Destinations"
+// import Destinations from "./Destinations"
 
 
 const Home = () => {

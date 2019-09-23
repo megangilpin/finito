@@ -5,7 +5,7 @@ import SidebarButton from "../Sidebar/SidebarButton"
 function Nav(props) {
   return (
     <nav className="navbar navbar-light navbar-expand-md bg-light">
-      <div className="container-fluid justify-content-between">
+      <div className="container justify-content-between">
         {/* button to toggle sidebar */}
         <SidebarButton onClick={props.sidebarToggleHandler} />
 

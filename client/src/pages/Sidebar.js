@@ -4,9 +4,6 @@ import Nav from "../components/Nav/";
 import Sidebar from "../components/Sidebar";
 import Backdrop from "../components/Backdrop";
 
-
-
-
 class Tabs extends React.Component {
   state = {
     page: "Home",
@@ -25,14 +22,13 @@ class Tabs extends React.Component {
 
   render() {
     let backdrop;
-    console.log(this.state)
+
     if (this.state.sidebarOpen) {
 
       backdrop = <Backdrop onClick={this.backdropClickHandler} />
     }
     return (
       <div style={{ height: "100%" }}>
-        {console.log(this.state)}
         <Sidebar show={this.state.sidebarOpen} />
         <Nav
           page={this.state.page}

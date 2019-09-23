@@ -17,19 +17,30 @@ module.exports = {
     res.json(mapURL)
   },
   geocode: (req, res) => {
-    console.log(req.body)
     const address = req.body.address
     let geocodeAddress = []
   // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
     Object.keys(address).forEach((item) => {
         geocodeAddress.push(address[item].replace(/\s/g, '+'))
     })
-    console.log(geocodeAddress)
     src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0] + ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=" + key
-    console.log(src)
+    // Get location and start saving to mongo
     axios
-      .get(src)
-      .then(({ data: { results } }) => res.json(results))
-      .catch(err => res.status(422).json(err));
+    .get(src)
+    .then(async ({ data: { results } }) => {
+    let tripId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    // Create a new trip
+    const newTrip = await new db.Trip({destinationAddress: results[0].formatted_address, destinationCoords: {lat: results[0].geometry.location.lat, lng: results[0].geometry.location.lng}, tripId, userId:""})
+    await newTrip.save()
+
+    // Send geolocation results up to the client so the destination can be plotted
+    res.json({results,tripId})
+    })
+  }, 
+  updateTrip: async (req, res) => { 
+    await db.Trip.findOneAndUpdate(
+      {tripId: req.body.tripId}, 
+      {$addToSet: {progress: req.body.progress}, $set: {userId: req.body.userId}}
+    ).then(results => (console.log(results)))
   }
 };

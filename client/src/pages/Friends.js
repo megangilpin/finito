@@ -11,7 +11,7 @@ class Friends extends Component {
   state = {
     name: [],
     phoneNumber: "",
-};
+  };
 
   componentDidMount() {
     this.loadFriend ();

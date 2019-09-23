@@ -58,23 +58,6 @@
           }
         })
       }); 
-
-      $(document).on("click", "#notification", (event) => {
-        event.preventDefault()
-        let phone = $("#phoneNumber").val()
-        phone = phone.replace(/-|\+|\ |\-|\(|\)/g,'')
-        
-        if((isNaN(phone) || phone.length === 0) || (phone.length > 11 || phone.length < 10)) { 
-          $("#error").html("")
-          $("#error").html("Please enter a valid US phone number.")
-        } else {
-          $("#error").html("")
-          $.post("/notification/text", {phone: phone}, (data) => { 
-          console.log(data)
-          })
-        }
-      }); 
-
     </script>
     <style>
 
