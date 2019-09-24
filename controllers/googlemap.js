@@ -17,22 +17,25 @@ module.exports = {
     res.json(mapURL)
   },
   geocode: (req, res) => {
-    console.log(req.body)
     const address = req.body.address
     let geocodeAddress = []
   // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
     Object.keys(address).forEach((item) => {
         geocodeAddress.push(address[item].replace(/\s/g, '+'))
     })
-    console.log(geocodeAddress)
-    src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0] + ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=" + key
-    console.log(src)
+    let src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0] + ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=" + key
+    // Get location and start saving to mongo
     axios
       .get(src)
-      .then(({ data: { results } }) => 
-      // this is where you save to mongo db
-      res.json(results))
-      .catch(err => res.status(422).json(err));
+      .then(async ({ data: { results } }) => {
+        let tripId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        // Create a new trip
+        const newTrip = await new db.Trip({ destinationAddress: results[0].formatted_address, destinationCoords: { lat: results[0].geometry.location.lat, lng: results[0].geometry.location.lng }, tripId, userId: "" })
+        await newTrip.save()
+
+        // Send geolocation results up to the client so the destination can be plotted
+        res.json({ results, tripId })
+      })
   },
   updateTrip: function (req, res) {
     db.Trip
@@ -41,23 +44,39 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   distanceMatrix: (req, res) => {
+    // let geocodeAddress = []
+    // let startDestination = req.body.start
+    // let mode = req.body.mode
+    
 
-    const address = req.body.address
-    console.log(address.city)
-    if(req.body.address){
+    // // if(req.body.destination){
+    // const address = req.body.destination
       
-      const address = req.body.address
-      let destinationAddress = []
-      // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
-      Object.keys(address).forEach((item) => {
-        destinationAddress.push(address[item].replace(/\s/g, '+'))
-      })
-
-    }
-
-
-    // src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=3692+Broadway,+43,+NEW+YORK,+NY&destinations=40.7516,-73.9755&mode=bicycling&key=AIzaSyAR9UNE2w5VbPW_9IJ3Z07w_tdUNsmdfos"
+    //   // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
+    //   Object.keys(address).forEach((item) => {
+    //     geocodeAddress.push(address[item].replace(/\s/g, '+'))
+    //   })
+      
+      // let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + geocodeAddress[0] + ", +" + geocodeAddress[1] + ", +" + geocodeAddress[2] + "&destinations=40.7516,-73.9755&mode=" + mode + "&key="
+      let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key="
+      console.log(src)
+      axios
+        .get(src)
+        .then(({ data }) => {
+          console.log(data)
+          // Send geolocation results up to the client so the destination can be plotted
+          res.json(data)
+        })
+        .catch(err => {
+          console.log(err)
+          res.status(422).json(err)
+        });
+    // }
+    // else if(req.body.geocodeDestination) {
+    //   console.log(req.body.geocodeDestination)
+    // }
 
     // altSrc ="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=AIzaSyAR9UNE2w5VbPW_9IJ3Z07w_tdUNsmdfos"
+
   }
 };

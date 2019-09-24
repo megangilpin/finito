@@ -1,33 +1,32 @@
 import React, { Component } from "react";
 import DeleteBtn from "../components/DeleteBtn";
-import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, TextArea, FormBtn } from "../components/Form";
 
-class Friends extends Component {
+class Users extends Component {
   state = {
     name: [],
     phoneNumber: "",
-};
+  };
 
   componentDidMount() {
-    this.loadFriend ();
+    this.loadUser ();
   }
 
-  loadFriend = () => {
-    API.getFriend()
+  loadUser = () => {
+    API.getUser()
       .then(res =>
         this.setState({ friends: res.data, name: "", phoneNumber: ""})
       )
       .catch(err => console.log(err));
   };
 
-  deleteFriend = id => {
-    API.deleteFriend (id)
-      .then(res => this.loadFriend())
+  deleteUser = id => {
+    API.deleteUser (id)
+      .then(res => this.loadUser())
       .catch(err => console.log(err));
   };
 
@@ -41,11 +40,11 @@ class Friends extends Component {
   handleFormSubmit = event => {
     event.preventDefault();
     if (this.state.name && this.state.phoneNumber) {
-      API.saveFriend({
+      API.saveUser({
         name: this.state.name,
         phoneNumber: this.state.phoneNumber,
       })
-        .then(res => this.loadFriend())
+        .then(res => this.loadUser())
         .catch(err => console.log(err));
     }
   };
@@ -80,16 +79,14 @@ class Friends extends Component {
           </Col>
           <Col size="md-6 sm-12">
            
-            {this.state.friends.length ? (
+            {this.state.Users.length ? (
               <List>
-                {this.state.friends.map(book => (
-                  <ListItem key={friend._id}>
-                    <Link to={"/friend/" + friend._id}>
-                      <strong>
-                        {book.title} by {book.author}
-                      </strong>
+                {this.state.users.map(book => (
+                  <ListItem key={this.state.user._id}>
+                    <Link to={"/friend/" + user._id}>
+                      
                     </Link>
-                    <DeleteBtn onClick={() => this.deleteFriend(friend._id)} />
+                    <DeleteBtn onClick={() => this.deleteUser(user._id)} />
                   </ListItem>
                 ))}
               </List>

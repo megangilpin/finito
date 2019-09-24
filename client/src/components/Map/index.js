@@ -2,11 +2,9 @@ import React from 'react';
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col } from "../Grid";
 import TransportationMethodButton from "../Transportation/Transportation";
-import Address from "../Address/Address";
 import Notification from "../Notification/Notification";
 import API from "../../utils/API";
 import { Input } from "../Form";
-
 
 class Map extends React.Component {
   state = {
@@ -35,17 +33,18 @@ class Map extends React.Component {
             progress: [{ lat: latitude, lng: longitude }],
             loading: false
           });
-          // Start watching location
-          this.watchPosition()
         }    
     }); 
  }
 
-  watchPosition = () => {
+  watchPosition = (tripId) => {
     navigator.geolocation.watchPosition(
       (position) => {
-        let location = this.state.progress.concat({ lat: position.coords.latitude, lng: position.coords.longitude })
+        let location = this.state.progress.concat({ lat: position.coords.latitude, lng: position.coords.longitude });
+        const userId = localStorage.getItem('user');
         this.setState({ progress: location })
+        // Save each watchPosition update to mongo so it can be reproduced for friend looking to track location
+        API.updateTrip(tripId, location, userId)
       }
     )
   }
@@ -58,7 +57,7 @@ class Map extends React.Component {
       city: this.state.searchCity.trim(),
       state: this.state.st.trim()
     }
-    console.log(address)
+    
     API.getGeocode({
       address
     })
@@ -66,12 +65,12 @@ class Map extends React.Component {
         if (res.data.status === "error") {
           throw new Error(res.data.message);
         }
+        
         this.setState(() => ({
-          googleAddress: res.data[0].formatted_address,
-          geocodeLocation: [{lat:(res.data[0].geometry.location.lat), lng:(res.data[0].geometry.location.lng)}]
+          googleAddress: res.data.results[0].formatted_address,
+          geocodeLocation: [{lat:(res.data.results[0].geometry.location.lat), lng:(res.data.results[0].geometry.location.lng)}]
         }));
-        console.log("Address from google: " + this.state.googleAddress)
-        console.log("New address: " + this.state.geocodeLocation)
+        this.watchPosition(res.data.tripId)
       })
       .catch(err => console.log(err));
   }
@@ -117,13 +116,13 @@ class Map extends React.Component {
       <Col size="md-12 xs-12">
         <TransportationMethodButton />
           <form>
-            <div className="row mx-3">
+            <div className="row">
               <div className="col">
                 <label><strong>Address</strong></label>
               </div>
             </div>
 
-            <div className="form-row mx-4">
+            <div className="form-row">
               <div className="col-md-12 col-xs-12 pt-2">
                 <Input 
                   value={this.state.searchAddress  || ''}
@@ -135,7 +134,7 @@ class Map extends React.Component {
               </div>
             </div>
 
-            <div className="form-row mx-4">
+            <div className="form-row">
               <div className="col">
                 <Input 
                   value={this.state.searchCity || ''}
@@ -159,6 +158,7 @@ class Map extends React.Component {
 
         <Notification 
             onClick={this.getGeocode}
+            
           />
       </Col>
       </div>
