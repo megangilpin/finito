@@ -8,9 +8,21 @@ module.exports = {
       .create({
          body: 'Hello there!',
          from: '+16467626167',
-         mediaUrl: ['https://demo.twilio.com/owl.png'],
+         mediaUrl: ['http://localhost:3000/dashboard/'],
          to: to
        })
       .then(message => res.send(message));
+    },
+    endmessage: (req, res) => {
+      const to = req.body.phone;
+      client.messages
+    .create({
+      body: " Your friend is arriving at their destination. Thanks for using Arryvl!",
+      from: '+16467626167',
+      mediaURL: ['http://localhost:3000/dashboard/'],
+      to:
+    })
+    .then(message => res.send(message));
     }
-};
+  };
+
