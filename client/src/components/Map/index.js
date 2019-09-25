@@ -11,7 +11,7 @@ class Map extends React.Component {
     progress: [],
     loading: true,
     googleAddress: "",
-    geocodeLocation: [{lat: 0, lng: 0}],
+    geocodeLocation: [{ lat: 40.748817, lng: -73.985428}],
     searchCity: "",
     st: "",
     searchAddress: "",
@@ -71,6 +71,34 @@ class Map extends React.Component {
           geocodeLocation: [{lat:(res.data.results[0].geometry.location.lat), lng:(res.data.results[0].geometry.location.lng)}]
         }));
         this.watchPosition(res.data.tripId)
+      })
+      .catch(err => console.log(err));
+  }
+
+  distanceMatrix = () => {
+    let distanceMatrixInfo = {
+      geocodeDestination: {
+        lat: this.state.geocodeLocation[0].lat,
+        lng: this.state.geocodeLocation[0].lng
+      },
+      start: {
+        lat: this.state.progress[0].lat,
+        lng: this.state.progress[0].lng
+      },
+      mode: "driving"
+    }
+    console.log(distanceMatrixInfo)
+    API.distanceMatrix({
+      distanceMatrixInfo
+    })
+      .then(res => {
+        if (res.data.status === "error") {
+          throw new Error(res.data.message);
+        }
+        console.log(res.data.destination_addresses[0])
+        console.log(res.data.origin_addresses[0])
+        console.log(res.data.rows[0].elements[0].duration.text)
+
       })
       .catch(err => console.log(err));
   }
@@ -158,8 +186,8 @@ class Map extends React.Component {
 
         <Notification 
             onClick={this.getGeocode}
-            
           />
+          <button type="button" onClick={this.distanceMatrix}className="btn btn-dark">Get distanceMatrix</button>
       </Col>
       </div>
     )

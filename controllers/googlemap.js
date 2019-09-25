@@ -44,21 +44,37 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   distanceMatrix: (req, res) => {
-    // let geocodeAddress = []
-    // let startDestination = req.body.start
-    // let mode = req.body.mode
-    
+    console.log(req.body)
+    let geocodeAddress = []
+    let startDestination = [req.body.distanceMatrixInfo.start.lat, req.body.distanceMatrixInfo.start.lng]
+    let mode = req.body.mode
 
-    // // if(req.body.destination){
-    // const address = req.body.destination
+    if (req.body.distanceMatrixInfo.destination){
+    const address = req.body.destination
       
-    //   // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
-    //   Object.keys(address).forEach((item) => {
-    //     geocodeAddress.push(address[item].replace(/\s/g, '+'))
-    //   })
-      
-      // let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + geocodeAddress[0] + ", +" + geocodeAddress[1] + ", +" + geocodeAddress[2] + "&destinations=40.7516,-73.9755&mode=" + mode + "&key="
-      let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key="
+      // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
+      Object.keys(address).forEach((item) => {
+        geocodeAddress.push(address[item].replace(/\s/g, '+'))
+      })
+
+    let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + startDestination[0] + "," + startDestination[1] + "&destinations=" + geocodeAddress[0] + ", +" + geocodeAddress[1] + ", +" + geocodeAddress[2] +"&mode=" + mode + "&key=AIzaSyDzMH-vUsR-mpApqrkPqqIRpYLkWzaULFY"
+    console.log(src)
+      axios
+        .get(src)
+        .then(({ data }) => {
+          console.log(data)
+          // Send geolocation results up to the client so the destination can be plotted
+          res.json(data)
+        })
+        .catch(err => {
+          console.log(err)
+          res.status(422).json(err)
+        });
+    }
+    else if (req.body.distanceMatrixInfo.geocodeDestination) {
+
+      let geocodeDestination = [req.body.distanceMatrixInfo.geocodeDestination.lat, req.body.distanceMatrixInfo.geocodeDestination.lng]
+      let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + startDestination[0] + "," + startDestination[1] + "&destinations=" + geocodeDestination[0] + "," + geocodeDestination[1] + "&mode=" + mode + "&key=AIzaSyDzMH-vUsR-mpApqrkPqqIRpYLkWzaULFY"
       console.log(src)
       axios
         .get(src)
@@ -71,12 +87,6 @@ module.exports = {
           console.log(err)
           res.status(422).json(err)
         });
-    // }
-    // else if(req.body.geocodeDestination) {
-    //   console.log(req.body.geocodeDestination)
-    // }
-
-    // altSrc ="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=AIzaSyAR9UNE2w5VbPW_9IJ3Z07w_tdUNsmdfos"
-
+    }
   }
 };

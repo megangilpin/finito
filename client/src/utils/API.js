@@ -6,6 +6,9 @@ export default {
   getGeocode: async (address) => {
     return await axios.post("/googlemap/geocode", address);
   },
+  distanceMatrix: async (distanceMatrixInfo) => {
+    return await axios.post("/googlemap/distanceMatrix", distanceMatrixInfo )
+  },
   // Saves a trip to the database
   updateTrip: async (tripId, progress, userId) => {
     return await axios.post("/googlemap/updateTrip", {tripId, progress, userId});
