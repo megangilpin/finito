@@ -11,25 +11,27 @@ class Map extends React.Component {
     progress: [],
     loading: true,
     googleAddress: "",
-    geocodeLocation: [{lat: 0, lng: 0}],
+    geocodeLocation: "",
     searchCity: "",
     st: "",
     searchAddress: "",
+    zoom: 16,
+    center: ""
   }
 
   initialLocation = () => {
-    const getPosition = function (options) {
+    const getPosition = function () {
       return new Promise(function (resolve, reject) {
-        navigator.geolocation.getCurrentPosition(resolve, reject, options);
+        navigator.geolocation.getCurrentPosition(resolve, reject, {maximumAge: 0});
       });
     }
 
     getPosition().then((position) => {
         const { latitude, longitude } = position.coords
-        
         if (position) {
           this.setState({
             progress: [{ lat: latitude, lng: longitude }],
+            geocodeLocation: [{ lat: latitude, lng: longitude }],
             loading: false
           });
         }    
@@ -44,11 +46,35 @@ class Map extends React.Component {
         this.setState({ progress: location })
         // Save each watchPosition update to mongo so it can be reproduced for friend looking to track location
         API.updateTrip(tripId, location, userId)
+        this.distanceCalc(this.state.progress[this.state.progress.length-1].lat, this.state.progress[this.state.progress.length-1].lng, this.state.geocodeLocation[0].lat, this.state.geocodeLocation[0].lng)
       }
     )
   }
 
-  // gets the Lat and Long from the google API
+  distanceCalc = (lat1, lon1, lat2, lon2) => { 
+    if ((lat1 === lat2) && (lon1 === lon2)) {
+      return 0;
+    }
+    else {
+      var radlat1 = Math.PI * lat1/180;
+      var radlat2 = Math.PI * lat2/180;
+      var theta = lon1-lon2;
+      var radtheta = Math.PI * theta/180;
+      var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+      if (dist > 1) {
+        dist = 1;
+      }
+      dist = Math.acos(dist);
+      dist = dist * 180/Math.PI;
+      dist = dist * 60 * 1.1515;
+      if (dist <= .06) { 
+        // If the user is less then .06 miles from the destination point trigger text message to friend
+        // Code to trigger message
+      } 
+    }
+  }
+
+  // Gets the Lat and Long from the google API
   getGeocode = () => {
     let address = {
       address: this.state.searchAddress.trim(),
@@ -66,11 +92,16 @@ class Map extends React.Component {
         
         this.setState(() => ({
           googleAddress: res.data.results[0].formatted_address,
-          geocodeLocation: [{lat:(res.data.results[0].geometry.location.lat), lng:(res.data.results[0].geometry.location.lng)}]
+          geocodeLocation: [{lat:res.data.results[0].geometry.location.lat, lng:res.data.results[0].geometry.location.lng}],
+          center: { lat:res.data.results[0].geometry.location.lat, lng:res.data.results[0].geometry.location.lng }
         }));
         this.watchPosition(res.data.tripId)
       })
       .catch(err => console.log(err));
+  }; 
+
+  mapCenterSetter = (coordinates) => { 
+    this.setState({center:coordinates})
   }
 
   handleInputChange = event => {
@@ -82,10 +113,29 @@ class Map extends React.Component {
 
   componentDidMount = () => {
     this.initialLocation()
-  }
-
+  };
+  
   render() {
-    const { loading, progress } = this.state;
+    const { loading, progress } = this.state; 
+    
+    const boundsChanged = () => { 
+      const google = window.google; 
+      let bound = new google.maps.LatLng();
+      const start = `${this.state.progress[0].lat}, ${this.state.progress[0].lng}`
+      const end = `${this.state.geocodeLocation[0].lat}, ${this.state.geocodeLocation[0].lng}`
+    
+     // Because state changes each time a new character is added, don't exent bounds until we know that there is an end destination
+     if (start !== end) {
+      // Extend the bounds by the coordinates of the start and end markers
+      bound.extend(new google.maps.LatLng({lat:parseFloat(this.state.geocodeLocation[0].lat), lng:parseFloat(this.state.geocodeLocation[0].lng)}));
+      bound.extend(new google.maps.LatLng({lat:parseFloat(this.state.progress[0].lat), lng:parseFloat(this.state.progress[0].lng)}));
+      google.maps.Map.fitBounds(bound);
+      // Get the center of the map between these markers
+      let centerCoordinates = { lat: bound.getCenter().lat(), lng: bound.getCenter().lat() }
+      // Pass the newly centered coordinates to a setter function that changes the map center state so it re-renders
+      this.mapCenterSetter(centerCoordinates);
+     }
+    }
 
     // Check if we have a position, if not, do not load map
     if (loading) {
@@ -97,16 +147,17 @@ class Map extends React.Component {
 
       <Col size="md-12 xs-12">
         <GoogleMap
-          defaultZoom={16}
-          defaultCenter={{ lat: progress[0].lat, lng: progress[0].lng }}
-        >
+          defaultZoom={this.state.zoom}
+          center={{ lat: this.state.geocodeLocation[0].lat, lng: this.state.geocodeLocation[0].lng }}
+          onBoundsChanged={boundsChanged}
+        > 
           {this.state.progress && (
             <>
               {/* Set path */}
               <Polyline path={progress} options={{ strokeColor: "#FF0000 " }} />
               {/* Set marker to last known location */}
               <Marker position={progress[progress.length - 1]} />
-                  <Marker position={{ lat: this.state.geocodeLocation[0].lat, lng: this.state.geocodeLocation[0].lng}} />
+                  <Marker position={{ lat: this.state.geocodeLocation[0].lat, lng: this.state.geocodeLocation[0].lng }} />
             </>
           )}
         </GoogleMap>
