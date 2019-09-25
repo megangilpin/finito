@@ -10,12 +10,14 @@ class Map extends React.Component {
   state = {
     progress: [],
     loading: true,
-    googleAddress: "",
-    geocodeLocation: [{ lat: 40.748817, lng: -73.985428}],
     searchCity: "",
     st: "",
     searchAddress: "",
-    user_id: ""
+    destinationAddress: "",
+    geocodeLocation: [{ lat: 0, lng: 0 }],
+    tripTime: "",
+    user_id: "",
+
   }
 
   initialLocation = () => {
@@ -36,6 +38,13 @@ class Map extends React.Component {
         }    
     }); 
  }
+ 
+  getUserID = () =>{
+    this.setState(() => ({
+      user_id: localStorage.getItem('user')
+    }))
+    console.log("user id:" + this.state.user_id)
+  }
 
   watchPosition = (tripId) => {
     navigator.geolocation.watchPosition(
@@ -49,7 +58,7 @@ class Map extends React.Component {
     )
   }
 
-  // gets the Lat and Long from the google API
+  // gets the Lat and Long from the google API and sets it to the state
   getGeocode = () => {
     let address = {
       user_id: this.state.user_id,
@@ -67,14 +76,16 @@ class Map extends React.Component {
         }
         
         this.setState(() => ({
-          googleAddress: res.data.results[0].formatted_address,
-          geocodeLocation: [{lat:(res.data.results[0].geometry.location.lat), lng:(res.data.results[0].geometry.location.lng)}]
+          destinationAddress: res.data.results[0].formatted_address,
+          geocodeLocation: [{lat:(res.data.results[0].geometry.location.lat), lng:(res.data.results[0].geometry.location.lng)}],
+          tripID: res.data.tripId
         }));
         this.watchPosition(res.data.tripId)
       })
       .catch(err => console.log(err));
   }
 
+  // gets the travel time from google API and sets it to the state
   distanceMatrix = () => {
     let distanceMatrixInfo = {
       geocodeDestination: {
@@ -98,7 +109,9 @@ class Map extends React.Component {
         console.log(res.data.destination_addresses[0])
         console.log(res.data.origin_addresses[0])
         console.log(res.data.rows[0].elements[0].duration.text)
-
+        this.setState(() => ({
+          tripTime: res.data.rows[0].elements[0].duration.text
+        }));
       })
       .catch(err => console.log(err));
   }
@@ -112,6 +125,7 @@ class Map extends React.Component {
 
   componentDidMount = () => {
     this.initialLocation()
+    this.getUserID()
   }
 
   render() {
