@@ -1,7 +1,7 @@
 import React from "react";
 import "./Sidebar.css"
 
-const sideBar = props => {
+const Sidebar = props => {
   let drawerClasses = "side-bar";
   if(props.show) {
     drawerClasses = "side-bar open";
@@ -21,4 +21,4 @@ const sideBar = props => {
   );
 };
 
-export default sideBar;
+export default Sidebar;

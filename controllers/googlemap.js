@@ -4,10 +4,7 @@ const axios = require("axios");
 
 module.exports = {
   tripURL: (req, res) => {
-    // Variables for url to send to friend
-    // comma-separated latitude/longitude coordinates
     const origin = req.body.origin;
-    // comma-separated latitude/longitude coordinates
     const destination = req.body.destination;
     // Options are driving, walking, bicycling or transit
     const transport = req.body.transport;
@@ -37,14 +34,14 @@ module.exports = {
         res.json({ results, tripId })
       })
   },
-  updateTrip: function (req, res) {
+  updateTrip: async (req, res) => {
+    console.log(req.body.tripTime)
     await db.Trip.findOneAndUpdate(
       { tripId: req.body.tripId },
-      { $addToSet: { progress: req.body.progress }, $set: { userId: req.body.userId } }
+      { $addToSet: { progress: req.body.progress }, $set: { userId: req.body.userId, $set: { tripTime: req.body.tripTime} } }
     ).then(results => (console.log(results)))
   },
   distanceMatrix: (req, res) => {
-    console.log(req.body)
     let geocodeAddress = []
     let startDestination = [req.body.distanceMatrixInfo.start.lat, req.body.distanceMatrixInfo.start.lng]
     let mode = req.body.mode
@@ -57,13 +54,10 @@ module.exports = {
         geocodeAddress.push(address[item].replace(/\s/g, '+'))
       })
 
-    let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + startDestination[0] + "," + startDestination[1] + "&destinations=" + geocodeAddress[0] + ", +" + geocodeAddress[1] + ", +" + geocodeAddress[2] +"&mode=" + mode + "&key=AIzaSyDzMH-vUsR-mpApqrkPqqIRpYLkWzaULFY"
-    console.log(src)
+    let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + startDestination[0] + "," + startDestination[1] + "&destinations=" + geocodeAddress[0] + ", +" + geocodeAddress[1] + ", +" + geocodeAddress[2] +"&mode=" + mode + "&key=" + key
       axios
         .get(src)
         .then(({ data }) => {
-          console.log(data)
-          // Send geolocation results up to the client so the destination can be plotted
           res.json(data)
         })
         .catch(err => {
@@ -74,7 +68,7 @@ module.exports = {
     else if (req.body.distanceMatrixInfo.geocodeDestination) {
 
       let geocodeDestination = [req.body.distanceMatrixInfo.geocodeDestination.lat, req.body.distanceMatrixInfo.geocodeDestination.lng]
-      let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + startDestination[0] + "," + startDestination[1] + "&destinations=" + geocodeDestination[0] + "," + geocodeDestination[1] + "&mode=" + mode + "&key=AIzaSyDzMH-vUsR-mpApqrkPqqIRpYLkWzaULFY"
+      let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + startDestination[0] + "," + startDestination[1] + "&destinations=" + geocodeDestination[0] + "," + geocodeDestination[1] + "&mode=" + mode + "&key=" + key
       console.log(src)
       axios
         .get(src)
@@ -88,5 +82,14 @@ module.exports = {
           res.status(422).json(err)
         });
     }
+  },
+  getTrip: async (req, res) => {
+    console.log(req.params.trip_id)
+    db.Trip.findOne({ tripId: req.params.trip_id })
+      .then(results => {
+        console.log(results)
+        res.json(results)
+      })
+      .catch(err => console.log(err));
   }
 };
