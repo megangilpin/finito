@@ -9,21 +9,24 @@ import { Input } from "../Form";
 
 class Map extends React.Component {
   state = {
-    progress: [],
-    loading: true,
+    progress: [], // Handle GPS updates
+    loading: true, // Prevent map from loading before initial position is collected
     googleAddress: "",
-    geocodeLocation: "",
-    searchCity: "",
-    st: "",
+    geocodeLocation: "", // Handle lat, long for destination
+    searchCity: "", // Handle "City" input
+    st: "", // Handle "State" input
+    phoneNumber: "", // Handle "Phone number input"
     searchAddress: "",
-    zoom: 16,
-    center: "", 
-    bounds: false, 
-    phoneNumber: "",
+    zoom: 16, // Handle initial map zoom
+    center: "", // Handle map centering
+    bounds: false, // Handle map boundaries
     tripTime: "",
     user_id: "",
-    trip_id: "",
-    src: "",
+    trip_id: "", 
+    src: "", 
+    startTextCount: 0, // Prevent initial text duplication on state changes
+    endTextCount: 0, // Prevent arrival text duplication on state changes
+    buttonDisabled: false // Handle multiple address submissions
   }
 
   initialLocation = () => {
@@ -32,7 +35,7 @@ class Map extends React.Component {
         navigator.geolocation.getCurrentPosition(resolve, reject, {maximumAge: 0});
       });
     }
-
+    // Get the user's starting location
     getPosition().then((position) => {
         const { latitude, longitude } = position.coords
         if (position) {
@@ -44,22 +47,22 @@ class Map extends React.Component {
           });
         }    
     }); 
- }
+  };
  
   getUserID = () =>{
     this.setState(() => ({
       user_id: localStorage.getItem('user')
-    }))
-    console.log("user id:" + this.state.user_id)
-  }
+    }));
+  };
 
   watchPosition = (tripId, tripTime) => {
     navigator.geolocation.watchPosition(
       (position) => {
         let location = this.state.progress.concat({ lat: position.coords.latitude, lng: position.coords.longitude });
+        console.log(location)
         const userId = localStorage.getItem('user');
-        this.setState({ progress: location })
-        // Save each watchPosition update to mongo so it can be reproduced for friend looking to track location
+        this.setState({ progress: location, buttonDisabled: true })
+        // Save GPS updates to database so it can be reproduced for friend to track the user's whereabouts. 
         API.updateTrip(tripId, location, userId, tripTime)
         this.distanceCalc(this.state.progress[this.state.progress.length-1].lat, this.state.progress[this.state.progress.length-1].lng, this.state.geocodeLocation[0].lat, this.state.geocodeLocation[0].lng)
       }
@@ -82,14 +85,17 @@ class Map extends React.Component {
       dist = Math.acos(dist);
       dist = dist * 180/Math.PI;
       dist = dist * 60 * 1.1515;
-      if (dist <= .06) { 
-        // If the user is less then .06 miles from the destination point trigger text message to friend
-        API.arrivalText(this.state.phoneNumber)
+      if (dist <= .03) { 
+        // If the user is less then .03 miles from the destination point trigger text message to friend
+        if (this.state.endTextCount === 0) {
+          API.arrivalText(this.state.phoneNumber)
+          this.setState({endTextCount: this.state.endTextCount + 1})
+        }
       } 
     }
   }
 
-  // Gets the Lat and Long from the google API
+  // Gets the Lat and Long from the google API for the user's end destination
   getGeocode = () => {
     let address = {
       user_id: this.state.user_id,
@@ -104,7 +110,7 @@ class Map extends React.Component {
         if (res.data.status === "error") {
           throw new Error(res.data.message);
         }
-        
+
         this.setState(() => ({
           googleAddress: res.data.results[0].formatted_address,
           geocodeLocation: [{lat:res.data.results[0].geometry.location.lat, lng:res.data.results[0].geometry.location.lng}],
@@ -118,7 +124,7 @@ class Map extends React.Component {
       .catch(err => console.log(err));
   }
 
-  // gets the travel time from google API and sets it to the state
+  // Calculate the estimated time for the trip based on the user's mode of transport
   distanceMatrix = () => {
     let distanceMatrixInfo = {
       geocodeDestination: {
@@ -131,7 +137,6 @@ class Map extends React.Component {
       },
       mode: "driving"
     }
-    console.log(distanceMatrixInfo)
     API.distanceMatrix({
       distanceMatrixInfo
     })
@@ -144,11 +149,17 @@ class Map extends React.Component {
           src: window.location.href + "friendview/" + this.state.trip_id
         }));
         this.watchPosition(this.state.trip_id, this.state.tripTime)
-        console.log(this.state.src)
+        if (this.state.startTextCount === 0) {
+          // Notify the friend of the user's trip
+          API.startTripText(this.state.phoneNumber,this.state.src)
+          // Ensure that only one text message is sent
+          this.setState({startTextCount: this.state.startTextCount + 1})
+        }
       })
       .catch(err => console.log(err));
   }; 
 
+  // Handles resetting the map center
   mapCenterSetter = (coordinates, bounds) => { 
     this.setState({center:coordinates}); 
     this.map.fitBounds(bounds)
@@ -165,20 +176,19 @@ class Map extends React.Component {
     this.initialLocation()
   };
 
+  // Handle the changing of map boundaries so it zooms to include the markers on the screen
   boundsChanged = () => { 
     const google = window.google; 
-
     const bounds = new google.maps.LatLngBounds();
     const start = `${this.state.progress[0].lat}, ${this.state.progress[0].lng}`
     const end = `${this.state.geocodeLocation[0].lat}, ${this.state.geocodeLocation[0].lng}`
-   // Because state changes each time a new character is added, don't exent bounds until we know that there is an end destination
+   // Don't exend map boundaries until we know that the user has added an end destination
    if (start !== end && this.state.bounds === false) {
     this.setState({bounds:true})
-    // Extend the bounds by the coordinates of the start and end markers
+    // Extend map boundaries to encompass the start and end markers
     bounds.extend(new google.maps.LatLng(parseFloat(this.state.geocodeLocation[0].lat), parseFloat(this.state.geocodeLocation[0].lng)));
     bounds.extend(new google.maps.LatLng(parseFloat(this.state.progress[0].lat), parseFloat(this.state.progress[0].lng)));
-    //google.maps.Map.fitBounds(bound);
-    // Get the center of the map between these markers
+    // Find the center of the start and end markers so the map can be repositioned
     let centerCoordinates = { lat: bounds.getCenter().lat(), lng: bounds.getCenter().lng() }
     // Pass the newly centered coordinates to a setter function that changes the map center state so it re-renders
     this.mapCenterSetter(centerCoordinates, bounds);
@@ -187,62 +197,58 @@ class Map extends React.Component {
   
   render() {
     const { loading, progress } = this.state; 
-    
-    // Check if we have a position, if not, do not load map
+
+    // Check if we have the user's position. If not, do not load map until this is collected.
     if (loading) {
       return null;
     }
     
     return (
       <div style={{ backgroundColor: "white"}}>
-
-      <Col size="md-12 xs-12">
-        <GoogleMap
-          defaultZoom={this.state.zoom}
-          center={this.state.center}
-          onBoundsChanged={this.boundsChanged}
-          ref={(ref) => { this.map = ref; }}
-        > 
-          {this.state.progress && (
-            <>
-              {/* Set path */}
-              <Polyline path={progress} options={{ strokeColor: "#FF0000 " }} />
-              {/* Set marker to last known location */}
-              <Marker position={progress[progress.length - 1]} />
-                  <Marker position={{ lat: this.state.geocodeLocation[0].lat, lng: this.state.geocodeLocation[0].lng }} />
-            </>
-          )}
-        </GoogleMap>
-        
-      </Col>
-      <Col size="md-12 xs-12">
-        <TransportationMethodButton />
+        <Col size="md-12 xs-12">
+          <GoogleMap
+            defaultZoom={this.state.zoom}
+            center={this.state.center}
+            onBoundsChanged={this.boundsChanged}
+            ref={(ref) => { this.map = ref; }}
+          > 
+            {this.state.progress && (
+              <>
+                {/* Build path */}
+                <Polyline path={progress} options={{ strokeColor: "#FF0000 " }} />
+                {/* Show current location by placing marker to last known GPS location collected */}
+                <Marker position={progress[progress.length - 1]} />
+                    <Marker position={{ lat: this.state.geocodeLocation[0].lat, lng: this.state.geocodeLocation[0].lng }} />
+              </>
+            )}
+          </GoogleMap>
+        </Col>
+        <Col size="md-12 xs-12">
+          <TransportationMethodButton />
           <form>
             <div className="row">
               <div className="col">
                 <label><strong>Address</strong></label>
               </div>
             </div>
-
             <div className="form-row">
               <div className="col-md-12 col-xs-12 pt-2">
                 <Input 
                   value={this.state.searchAddress  || ''}
                   onChange={this.handleInputChange}
                   name="searchAddress"
-                  placeholder="Address (required)"
+                  placeholder="Address"
                   type="text"
                 />
               </div>
             </div>
-
             <div className="form-row">
               <div className="col">
                 <Input 
                   value={this.state.searchCity || ''}
                   onChange={this.handleInputChange}
                   name="searchCity"
-                  placeholder="City (required)"
+                  placeholder="City"
                   type="text"
                 />
               </div>
@@ -251,7 +257,7 @@ class Map extends React.Component {
                   value={this.state.st || ''}
                   onChange={this.handleInputChange}
                   name="st"
-                  placeholder="State (required)"
+                  placeholder="State"
                   type="text"
                 />
               </div>
@@ -259,28 +265,26 @@ class Map extends React.Component {
 
             <div className="form-row">
               <div className="col pt-4">
-                    <label><strong>Contact</strong></label>
+                    <label><strong>Notif</strong></label>
                 </div>
             </div>
             <div className="form-row">
                 <div className="col">
-                  {/* <input className="w-100 form-control mb-2" type="text" id="phoneNumber" placeholder="123-555-5555" required/> */}
                   <Input 
                     value={this.state.phoneNumber || ''}
                     onChange={this.handleInputChange}
                     name="phoneNumber"
-                    placeholder="123-555-5555 (required)"
+                    placeholder="123-555-5555"
                     type="text"
                   />
                 </div>
             </div>
           </form>
-
-        <Notification 
+          <Notification 
             onClick={this.getGeocode}
+            isDisabled={this.state.buttonDisabled}
           />
-          <Link to={{ pathname: "/dashboard/friendview/" + this.state.trip_id }}>See Friends Page</Link>
-      </Col>
+        </Col>
       </div>
     )
   }
