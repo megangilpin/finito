@@ -1,6 +1,6 @@
 import React from 'react';
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
-import { Col } from "../Grid";
+import { Col, Row } from "../Grid";
 import API from "../../utils/API";
 
 
@@ -13,12 +13,14 @@ class Map extends React.Component {
     tripTime: "",
     destinationCoords: [],
     destinationAddress: "",
+    count: 0,
+    switch: false
   }
 
   componentDidMount = () => {
     console.log(this.state.trip_id)
-    // this.initialLocation()
     this.getTrip(this.state.trip_id)
+    
   }
 
   getTrip = (trip_id) =>{
@@ -35,12 +37,22 @@ class Map extends React.Component {
           tripTime: res.data.tripTime,
           destinationAddress: res.data.destinationAddress,
           destinationCoords: [{ lat: res.data.destinationCoords[0].lat, lng: res.data.destinationCoords[0].lng }],
-          loading: false
+          loading: false,
+          count: this.state.count + 1
         }));
-        console.log(this.state)
-        console.log(this.state.destinationCoords[0].lat)
+        console.log(this.state.count)
+        // setInterval(this.getTrip(trip_id), 5000)
       })
       .catch(err => console.log(err));
+  }
+
+  callAgain = () => {
+    setTimeout(this.helper, 30000)
+  }
+
+  helper = () => {
+    this.setState({ switch: !this.state.switch })
+    this.getTrip(this.state.trip_id)
   }
 
   render() {
@@ -53,7 +65,7 @@ class Map extends React.Component {
 
     return (
       <div>
-
+      {this.callAgain()}
         <Col size="md-12 xs-12">
           <GoogleMap
             defaultZoom={16}
