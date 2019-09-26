@@ -12,5 +12,16 @@ module.exports = {
          to: to
        })
       .then(message => res.send(message));
-    }
+    }, 
+    arrival: (req, res) => { 
+      const to = req.body.phone;
+      client.messages
+    .create({
+       body: 'Your friend is arriving! Give them a call to make sure they made it.',
+       from: '+16467626167',
+       to: to
+     })
+    .then(message => res.send(message));
+  }, 
+
 };

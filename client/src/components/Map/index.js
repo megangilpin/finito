@@ -16,7 +16,9 @@ class Map extends React.Component {
     st: "",
     searchAddress: "",
     zoom: 16,
-    center: ""
+    center: "", 
+    bounds: false, 
+    phoneNumber: ""
   }
 
   initialLocation = () => {
@@ -32,6 +34,7 @@ class Map extends React.Component {
           this.setState({
             progress: [{ lat: latitude, lng: longitude }],
             geocodeLocation: [{ lat: latitude, lng: longitude }],
+            center: { lat: latitude, lng: longitude },
             loading: false
           });
         }    
@@ -69,7 +72,7 @@ class Map extends React.Component {
       dist = dist * 60 * 1.1515;
       if (dist <= .06) { 
         // If the user is less then .06 miles from the destination point trigger text message to friend
-        // Code to trigger message
+        API.arrivalText(this.state.phoneNumber)
       } 
     }
   }
@@ -100,8 +103,9 @@ class Map extends React.Component {
       .catch(err => console.log(err));
   }; 
 
-  mapCenterSetter = (coordinates) => { 
-    this.setState({center:coordinates})
+  mapCenterSetter = (coordinates, bounds) => { 
+    this.setState({center:coordinates}); 
+    this.map.fitBounds(bounds)
   }
 
   handleInputChange = event => {
@@ -114,29 +118,30 @@ class Map extends React.Component {
   componentDidMount = () => {
     this.initialLocation()
   };
+
+  boundsChanged = () => { 
+    const google = window.google; 
+
+    const bounds = new google.maps.LatLngBounds();
+    const start = `${this.state.progress[0].lat}, ${this.state.progress[0].lng}`
+    const end = `${this.state.geocodeLocation[0].lat}, ${this.state.geocodeLocation[0].lng}`
+   // Because state changes each time a new character is added, don't exent bounds until we know that there is an end destination
+   if (start !== end && this.state.bounds === false) {
+    this.setState({bounds:true})
+    // Extend the bounds by the coordinates of the start and end markers
+    bounds.extend(new google.maps.LatLng(parseFloat(this.state.geocodeLocation[0].lat), parseFloat(this.state.geocodeLocation[0].lng)));
+    bounds.extend(new google.maps.LatLng(parseFloat(this.state.progress[0].lat), parseFloat(this.state.progress[0].lng)));
+    //google.maps.Map.fitBounds(bound);
+    // Get the center of the map between these markers
+    let centerCoordinates = { lat: bounds.getCenter().lat(), lng: bounds.getCenter().lng() }
+    // Pass the newly centered coordinates to a setter function that changes the map center state so it re-renders
+    this.mapCenterSetter(centerCoordinates, bounds);
+   }
+  }
   
   render() {
     const { loading, progress } = this.state; 
     
-    const boundsChanged = () => { 
-      const google = window.google; 
-      let bound = new google.maps.LatLng();
-      const start = `${this.state.progress[0].lat}, ${this.state.progress[0].lng}`
-      const end = `${this.state.geocodeLocation[0].lat}, ${this.state.geocodeLocation[0].lng}`
-    
-     // Because state changes each time a new character is added, don't exent bounds until we know that there is an end destination
-     if (start !== end) {
-      // Extend the bounds by the coordinates of the start and end markers
-      bound.extend(new google.maps.LatLng({lat:parseFloat(this.state.geocodeLocation[0].lat), lng:parseFloat(this.state.geocodeLocation[0].lng)}));
-      bound.extend(new google.maps.LatLng({lat:parseFloat(this.state.progress[0].lat), lng:parseFloat(this.state.progress[0].lng)}));
-      google.maps.Map.fitBounds(bound);
-      // Get the center of the map between these markers
-      let centerCoordinates = { lat: bound.getCenter().lat(), lng: bound.getCenter().lat() }
-      // Pass the newly centered coordinates to a setter function that changes the map center state so it re-renders
-      this.mapCenterSetter(centerCoordinates);
-     }
-    }
-
     // Check if we have a position, if not, do not load map
     if (loading) {
       return null;
@@ -148,8 +153,9 @@ class Map extends React.Component {
       <Col size="md-12 xs-12">
         <GoogleMap
           defaultZoom={this.state.zoom}
-          center={{ lat: this.state.geocodeLocation[0].lat, lng: this.state.geocodeLocation[0].lng }}
-          onBoundsChanged={boundsChanged}
+          center={this.state.center}
+          onBoundsChanged={this.boundsChanged}
+          ref={(ref) => { this.map = ref; }}
         > 
           {this.state.progress && (
             <>
@@ -202,6 +208,24 @@ class Map extends React.Component {
                   type="text"
                 />
               </div>
+            </div>
+
+            <div className="form-row">
+              <div className="col pt-4">
+                    <label><strong>Contact</strong></label>
+                </div>
+            </div>
+            <div className="form-row">
+                <div className="col">
+                  {/* <input className="w-100 form-control mb-2" type="text" id="phoneNumber" placeholder="123-555-5555" required/> */}
+                  <Input 
+                    value={this.state.phoneNumber || ''}
+                    onChange={this.handleInputChange}
+                    name="phoneNumber"
+                    placeholder="123-555-5555 (required)"
+                    type="text"
+                  />
+                </div>
             </div>
           </form>
 

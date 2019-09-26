@@ -9,5 +9,10 @@ export default {
   // Saves a trip to the database
   updateTrip: async (tripId, progress, userId) => {
     return await axios.post("/googlemap/updateTrip", {tripId, progress, userId});
+  }, 
+  // Saves a trip to the database
+  arrivalText: async (phone) => {
+    console.log("API")
+    return await axios.post("/notification/text/arrival", {phone});
   }  
 };
