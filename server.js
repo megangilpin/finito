@@ -22,6 +22,8 @@ app.use("/auth", require("./routes/loginRoute.js"))
 app.use("/notification", require("./routes/twilioRoute.js"))
 app.use("/googlemap", require("./routes/googlemapRoute.js"))
 
+
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 })

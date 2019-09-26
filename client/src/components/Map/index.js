@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col } from "../Grid";
 import TransportationMethodButton from "../Transportation/Transportation";
@@ -18,7 +19,11 @@ class Map extends React.Component {
     zoom: 16,
     center: "", 
     bounds: false, 
-    phoneNumber: ""
+    phoneNumber: "",
+    tripTime: "",
+    user_id: "",
+    trip_id: "",
+    src: "",
   }
 
   initialLocation = () => {
@@ -40,15 +45,22 @@ class Map extends React.Component {
         }    
     }); 
  }
+ 
+  getUserID = () =>{
+    this.setState(() => ({
+      user_id: localStorage.getItem('user')
+    }))
+    console.log("user id:" + this.state.user_id)
+  }
 
-  watchPosition = (tripId) => {
+  watchPosition = (tripId, tripTime) => {
     navigator.geolocation.watchPosition(
       (position) => {
         let location = this.state.progress.concat({ lat: position.coords.latitude, lng: position.coords.longitude });
         const userId = localStorage.getItem('user');
         this.setState({ progress: location })
         // Save each watchPosition update to mongo so it can be reproduced for friend looking to track location
-        API.updateTrip(tripId, location, userId)
+        API.updateTrip(tripId, location, userId, tripTime)
         this.distanceCalc(this.state.progress[this.state.progress.length-1].lat, this.state.progress[this.state.progress.length-1].lng, this.state.geocodeLocation[0].lat, this.state.geocodeLocation[0].lng)
       }
     )
@@ -80,11 +92,11 @@ class Map extends React.Component {
   // Gets the Lat and Long from the google API
   getGeocode = () => {
     let address = {
+      user_id: this.state.user_id,
       address: this.state.searchAddress.trim(),
       city: this.state.searchCity.trim(),
       state: this.state.st.trim()
     }
-    
     API.getGeocode({
       address
     })
@@ -96,9 +108,43 @@ class Map extends React.Component {
         this.setState(() => ({
           googleAddress: res.data.results[0].formatted_address,
           geocodeLocation: [{lat:res.data.results[0].geometry.location.lat, lng:res.data.results[0].geometry.location.lng}],
-          center: { lat:res.data.results[0].geometry.location.lat, lng:res.data.results[0].geometry.location.lng }
+          center: { lat:res.data.results[0].geometry.location.lat, lng:res.data.results[0].geometry.location.lng },
+          trip_id: res.data.tripId,
+          
         }));
-        this.watchPosition(res.data.tripId)
+        this.distanceMatrix()
+ 
+      })
+      .catch(err => console.log(err));
+  }
+
+  // gets the travel time from google API and sets it to the state
+  distanceMatrix = () => {
+    let distanceMatrixInfo = {
+      geocodeDestination: {
+        lat: this.state.geocodeLocation[0].lat,
+        lng: this.state.geocodeLocation[0].lng
+      },
+      start: {
+        lat: this.state.progress[0].lat,
+        lng: this.state.progress[0].lng
+      },
+      mode: "driving"
+    }
+    console.log(distanceMatrixInfo)
+    API.distanceMatrix({
+      distanceMatrixInfo
+    })
+      .then(res => {
+        if (res.data.status === "error") {
+          throw new Error(res.data.message);
+        }
+        this.setState(() => ({
+          tripTime: res.data.rows[0].elements[0].duration.text,
+          src: window.location.href + "friendview/" + this.state.trip_id
+        }));
+        this.watchPosition(this.state.trip_id, this.state.tripTime)
+        console.log(this.state.src)
       })
       .catch(err => console.log(err));
   }; 
@@ -148,7 +194,7 @@ class Map extends React.Component {
     }
     
     return (
-      <div>
+      <div style={{ backgroundColor: "white"}}>
 
       <Col size="md-12 xs-12">
         <GoogleMap
@@ -167,6 +213,7 @@ class Map extends React.Component {
             </>
           )}
         </GoogleMap>
+        
       </Col>
       <Col size="md-12 xs-12">
         <TransportationMethodButton />
@@ -231,8 +278,8 @@ class Map extends React.Component {
 
         <Notification 
             onClick={this.getGeocode}
-            
           />
+          <Link to={{ pathname: "/dashboard/friendview/" + this.state.trip_id }}>See Friends Page</Link>
       </Col>
       </div>
     )

@@ -13,8 +13,8 @@ const Home = () => {
     return (
         <div style={{height: "100%"}}>
         <Tabs />
-          <Container >
-          <Row>
+          <Container  >
+          <Row style={{ background: `white` }}>
             <Col size="md-12 xs-12">
               <MapComponent
                 googleMapURL={mapURL}

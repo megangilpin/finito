@@ -19,6 +19,9 @@ const TripSchema = new Schema({
     },
     userId: {
         type: String
+    },
+    tripTime: {
+        type: String
     }
   });
   
