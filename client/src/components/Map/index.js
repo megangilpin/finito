@@ -26,7 +26,8 @@ class Map extends React.Component {
     src: "", 
     startTextCount: 0, // Prevent initial text duplication on state changes
     endTextCount: 0, // Prevent arrival text duplication on state changes
-    buttonDisabled: false // Handle multiple address submissions
+    buttonDisabled: false, // Handle multiple address submissions
+    buttonText: "Start" // Handle changing text on button to indicate that their friend has arrived
   }
 
   initialLocation = () => {
@@ -56,15 +57,20 @@ class Map extends React.Component {
   };
 
   watchPosition = (tripId, tripTime) => {
-    navigator.geolocation.watchPosition(
+    const watch = navigator.geolocation.watchPosition(
       (position) => {
         let location = this.state.progress.concat({ lat: position.coords.latitude, lng: position.coords.longitude });
         console.log(location)
         const userId = localStorage.getItem('user');
-        this.setState({ progress: location, buttonDisabled: true })
+        this.setState({ progress: location, buttonDisabled: true, buttonText: "Text Sent" })
         // Save GPS updates to database so it can be reproduced for friend to track the user's whereabouts. 
         API.updateTrip(tripId, location, userId, tripTime)
         this.distanceCalc(this.state.progress[this.state.progress.length-1].lat, this.state.progress[this.state.progress.length-1].lng, this.state.geocodeLocation[0].lat, this.state.geocodeLocation[0].lng)
+        
+        // If a text message has been sent to denote arrival, stop watching the user's position.
+        if (this.state.endTextCount === 1) { 
+          navigator.geolocation.clearWatch(watch);
+        }
       }
     )
   }
@@ -85,7 +91,7 @@ class Map extends React.Component {
       dist = Math.acos(dist);
       dist = dist * 180/Math.PI;
       dist = dist * 60 * 1.1515;
-      if (dist <= .03) { 
+      if (dist <= .06) { 
         // If the user is less then .03 miles from the destination point trigger text message to friend
         if (this.state.endTextCount === 0) {
           API.arrivalText(this.state.phoneNumber)
@@ -119,7 +125,9 @@ class Map extends React.Component {
           
         }));
         this.distanceMatrix()
- 
+        // Jump to top of page after submission as scrolling upward to the map can sometimes refresh the page on a phone
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
       })
       .catch(err => console.log(err));
   }
@@ -239,6 +247,7 @@ class Map extends React.Component {
                   name="searchAddress"
                   placeholder="Address"
                   type="text"
+                  disabled={this.state.buttonDisabled}
                 />
               </div>
             </div>
@@ -250,6 +259,7 @@ class Map extends React.Component {
                   name="searchCity"
                   placeholder="City"
                   type="text"
+                  disabled={this.state.buttonDisabled}
                 />
               </div>
               <div className="col">
@@ -259,13 +269,14 @@ class Map extends React.Component {
                   name="st"
                   placeholder="State"
                   type="text"
+                  disabled={this.state.buttonDisabled}
                 />
               </div>
             </div>
 
             <div className="form-row">
               <div className="col pt-4">
-                    <label><strong>Notif</strong></label>
+                    <label><strong>Notify a friend</strong></label>
                 </div>
             </div>
             <div className="form-row">
@@ -276,6 +287,7 @@ class Map extends React.Component {
                     name="phoneNumber"
                     placeholder="123-555-5555"
                     type="text"
+                    disabled={this.state.buttonDisabled}
                   />
                 </div>
             </div>
@@ -283,6 +295,7 @@ class Map extends React.Component {
           <Notification 
             onClick={this.getGeocode}
             isDisabled={this.state.buttonDisabled}
+            buttonText={this.state.buttonText}
           />
         </Col>
       </div>
