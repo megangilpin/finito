@@ -38,7 +38,7 @@ module.exports = {
     console.log(req.body.tripTime)
     await db.Trip.findOneAndUpdate(
       { tripId: req.body.tripId },
-      { $addToSet: { progress: req.body.progress }, $set: { userId: req.body.userId, $set: { tripTime: req.body.tripTime} } }
+      { $addToSet: { progress: req.body.progress }, $set: { userId: req.body.userId, tripTime: req.body.tripTime } }
     ).then(results => (console.log(results)))
   },
   distanceMatrix: (req, res) => {

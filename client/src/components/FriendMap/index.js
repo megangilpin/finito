@@ -9,9 +9,10 @@ class Map extends React.Component {
   state = {
     progress: [],
     loading: true,
-    trip_id: this.props.user_id,
+    trip_id: this.props.trip_id,
     tripTime: "",
-    destinationCoords: [{lat:"",lng:""}]
+    destinationCoords: [{lat:"",lng:""}],
+    destinationAddress: "",
   }
 
   initialLocation = () => {
@@ -34,11 +35,13 @@ class Map extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log(this.state.trip_id)
     this.initialLocation()
+    this.getTrip(this.state.trip_id)
   }
 
   getTrip = (trip_id) =>{
-    console.log(trip_id)
+    console.log("Trip Id sent to friend:" + this.state.trip_id)
     API.getTrip(
       trip_id
    )
@@ -46,9 +49,10 @@ class Map extends React.Component {
         if (res.data.status === "error") {
           throw new Error(res.data.message);
         }
-        console.log(res.data)
         this.setState(() => ({
-          progress: res.data.progress
+          progress: res.data.progress,
+          tripTime: res.data.tripTime,
+          destinationAddress: res.data.destinationAddress
         }));
 
       })
@@ -83,7 +87,8 @@ class Map extends React.Component {
           </GoogleMap>
         </Col>
         <Col size="md-12 xs-12">
-          <p>Now I Can write something</p>
+          <p>{this.state.tripTime}</p>
+          <p>{this.state.destinationAddress}</p>
         </Col>
       </div>
     )
