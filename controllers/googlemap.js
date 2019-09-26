@@ -16,26 +16,25 @@ module.exports = {
   geocode: (req, res) => {
     const address = req.body.address
     let geocodeAddress = []
-  // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
+
+    // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
     Object.keys(address).forEach((item) => {
         geocodeAddress.push(address[item].replace(/\s/g, '+'))
     })
-    let src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0] + ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=" + key
+    src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0] + ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=AIzaSyDzMH-vUsR-mpApqrkPqqIRpYLkWzaULFY"
     // Get location and start saving to mongo
     axios
-      .get(src)
-      .then(async ({ data: { results } }) => {
-        let tripId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        // Create a new trip
-        const newTrip = await new db.Trip({ destinationAddress: results[0].formatted_address, destinationCoords: { lat: results[0].geometry.location.lat, lng: results[0].geometry.location.lng }, tripId, userId: req.body.address.user_id })
-        await newTrip.save()
-
-        // Send geolocation results up to the client so the destination can be plotted
-        res.json({ results, tripId })
-      })
-  },
-  updateTrip: async (req, res) => {
-    console.log(req.body.tripTime)
+    .get(src)
+    .then(async ({ data: { results } }) => { 
+    let tripId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    // Create a new trip
+      const newTrip = await new db.Trip({ destinationAddress: results[0].formatted_address, destinationCoords: { lat: results[0].geometry.location.lat, lng: results[0].geometry.location.lng }, tripId, tripId, userId: req.body.address.user_id})
+    await newTrip.save()
+    // Send geolocation results up to the client so the destination can be plotted
+    res.json({results,tripId})
+    })
+  }, 
+  updateTrip: async (req, res) => { 
     await db.Trip.findOneAndUpdate(
       { tripId: req.body.tripId },
       { $addToSet: { progress: req.body.progress }, $set: { userId: req.body.userId, tripTime: req.body.tripTime } }

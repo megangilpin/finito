@@ -3,7 +3,7 @@
   background: white;
   position: fixed;
   top: 0;
-  left: 0;
+  left: -1px;
   width: 70%;
   max-width: 50vh;
   z-index: 200;
