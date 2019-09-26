@@ -9,5 +9,8 @@ export default {
   // Saves a trip to the database
   updateTrip: async (tripId, progress, userId) => {
     return await axios.post("/googlemap/updateTrip", {tripId, progress, userId});
-  }  
+  }, 
+  startTwilio: async (phone, tripURL) => {
+    return await axios.post("/notification/text", {phone, tripURL});
+  }
 };
