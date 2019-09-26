@@ -12,7 +12,6 @@ export default {
   }, 
   // Saves a trip to the database
   arrivalText: async (phone) => {
-    console.log("API")
     return await axios.post("/notification/text/arrival", {phone});
   }  
 };
