@@ -11,32 +11,13 @@ class Map extends React.Component {
     loading: true,
     trip_id: this.props.trip_id,
     tripTime: "",
-    destinationCoords: [{lat:"",lng:""}],
+    destinationCoords: [],
     destinationAddress: "",
-  }
-
-  initialLocation = () => {
-    const getPosition = function (options) {
-      return new Promise(function (resolve, reject) {
-        navigator.geolocation.getCurrentPosition(resolve, reject, options);
-      });
-    }
-
-    getPosition().then((position) => {
-      const { latitude, longitude } = position.coords
-
-      if (position) {
-        this.setState({
-          progress: [{ lat: latitude, lng: longitude }],
-          loading: false
-        });
-      }
-    });
   }
 
   componentDidMount = () => {
     console.log(this.state.trip_id)
-    this.initialLocation()
+    // this.initialLocation()
     this.getTrip(this.state.trip_id)
   }
 
@@ -46,15 +27,18 @@ class Map extends React.Component {
       trip_id
    )
       .then(res => {
-        if (res.data.status === "error") {
-          throw new Error(res.data.message);
-        }
+        // if (res.data.status === "error") {
+        //   throw new Error(res.data.message);
+        // }
         this.setState(() => ({
           progress: res.data.progress,
           tripTime: res.data.tripTime,
-          destinationAddress: res.data.destinationAddress
+          destinationAddress: res.data.destinationAddress,
+          destinationCoords: [{ lat: res.data.destinationCoords[0].lat, lng: res.data.destinationCoords[0].lng }],
+          loading: false
         }));
-
+        console.log(this.state)
+        console.log(this.state.destinationCoords[0].lat)
       })
       .catch(err => console.log(err));
   }
@@ -73,17 +57,19 @@ class Map extends React.Component {
         <Col size="md-12 xs-12">
           <GoogleMap
             defaultZoom={16}
-            defaultCenter={{ lat: progress[0].lat, lng: progress[0].lng }}
+            defaultCenter={{ lat: this.state.progress[0].lat, lng: this.state.progress[0].lng }}
           >
             {this.state.progress && (
               <>
                 {/* Set path */}
-                <Polyline path={progress} options={{ strokeColor: "#FF0000 " }} />
+                <Polyline path={this.state.progress} options={{ strokeColor: "#FF0000 " }} />
                 {/* Set marker to last known location */}
-                <Marker position={progress[progress.length - 1]} />
+                <Marker position={this.state.progress[this.state.progress.length - 1]} />
+                {console.log("Destination Coords:" + this.state.destinationCoords[0].lng)}
                 <Marker position={{ lat: this.state.destinationCoords[0].lat, lng: this.state.destinationCoords[0].lng }} />
               </>
             )}
+            
           </GoogleMap>
         </Col>
         <Col size="md-12 xs-12">

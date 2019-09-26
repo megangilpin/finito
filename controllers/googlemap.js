@@ -84,7 +84,6 @@ module.exports = {
     }
   },
   getTrip: async (req, res) => {
-    console.log(req.params.trip_id)
     db.Trip.findOne({ tripId: req.params.trip_id })
       .then(results => {
         console.log(results)
