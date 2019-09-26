@@ -14,7 +14,7 @@ handleTransportationMethod = method => {
 render() {
     return (
         <> 
-            <div className="my-3">
+            <div className="py-3">
                 <div className="button no-gutters rounded row" id="transportationMethod">
                     <div onClick={() => this.handleTransportationMethod("Foot")} className={this.state.transportationMethod === "Foot" ? "selected col-4 rounded-left text-center active" : "bg-light col-4 rounded-left text-center"}> 
                         Foot

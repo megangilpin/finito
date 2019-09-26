@@ -12,7 +12,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Main} />
           <Route exact path="/dashboard" component={Home} />
-          <Route path="/friendview/:id" component={Friendview} />
+          <Route path="/dashboard/friendview/:id" component={Friendview} />
         </Switch>
       </div>
     </Router>

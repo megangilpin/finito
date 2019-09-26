@@ -11,8 +11,8 @@ const Home = () => {
     return (
         <div style={{height: "100%"}}>
         <Tabs />
-          <Container >
-          <Row>
+          <Container  >
+          <Row style={{ background: `white` }}>
             <Col size="md-12 xs-12">
               <MapComponent
                 googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"

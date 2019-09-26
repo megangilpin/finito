@@ -15,11 +15,11 @@ class Map extends React.Component {
     st: "",
     searchAddress: "",
     destinationAddress: "",
-    geocodeLocation: [{ lat: 40.748817, lng: -73.985428}],
+    geocodeLocation: [{ lat: "", lng: ""}],
     tripTime: "",
     user_id: "",
-    trip_id: "x0tqv5qlj0cwizybuf7sc",
-
+    trip_id: "",
+    src: "",
   }
 
   initialLocation = () => {
@@ -79,10 +79,11 @@ class Map extends React.Component {
         this.setState(() => ({
           destinationAddress: res.data.results[0].formatted_address,
           geocodeLocation: [{lat:(res.data.results[0].geometry.location.lat), lng:(res.data.results[0].geometry.location.lng)}],
-          trip_id: res.data.tripId
+          trip_id: res.data.tripId,
+          src: window.location.href + "friendview/" + this.state.trip_id
         }));
         this.distanceMatrix()
-        console.log(this.state.trip_id)
+        console.log(this.state.src)
       })
       .catch(err => console.log(err));
   }
@@ -137,7 +138,7 @@ class Map extends React.Component {
     }
     
     return (
-      <div>
+      <div style={{ backgroundColor: "white"}}>
 
       <Col size="md-12 xs-12">
         <GoogleMap
@@ -154,6 +155,7 @@ class Map extends React.Component {
             </>
           )}
         </GoogleMap>
+        
       </Col>
       <Col size="md-12 xs-12">
         <TransportationMethodButton />
