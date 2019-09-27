@@ -1,13 +1,11 @@
-import React, { Component } from "react";
-// import DeleteBtn from "../components/DeleteBtn";
-// import Jumbotron from "../components/Jumbotron";
+import React from "react";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, TextArea, FormBtn } from "../components/Form";
 
-class Destinations extends Component {
+class Destinations extends React.Component {
   state = {
     name: [],
     searchAddress: "",
@@ -19,20 +17,6 @@ class Destinations extends Component {
   componentDidMount() {
     // this.loadDestination ();
   }
-
-  // loadDestination = () => {
-  //   API.getDestination()
-  //     .then(res =>
-  //       this.setState({ destinations: res.data, name: "", address: "", city: "", st: ""})
-  //     )
-  //     .catch(err => console.log(err));
-  // };
-
-  // deleteDestination = id => {
-  //   API.deleteDestination (id)
-  //     .then(res => this.loadDestination())
-  //     .catch(err => console.log(err));
-  // };
 
   handleInputChange = event => {
     const { name, value } = event.target;

@@ -20,16 +20,29 @@ class Tabs extends React.Component {
     this.setState({ sidebarOpen: false })
   }
 
+  handlePageChange = page => {
+    this.setState({ page: page });
+  };
+
+  handleReset = (page) => {
+    this.setState({ page: page });
+  };
+
   render() {
     let backdrop;
 
     if (this.state.sidebarOpen) {
-
       backdrop = <Backdrop onClick={this.backdropClickHandler} />
     }
+
     return (
       <div style={{ height: "100%" }}>
-        <Sidebar show={this.state.sidebarOpen} />
+        <Sidebar 
+          show={this.state.sidebarOpen} 
+          handlePageChange={this.handlePageChange}
+          page={this.state.page}
+          reset={this.handleReset}
+        />
         <Nav
           page={this.state.page}
           sidebarToggleHandler={this.sidebarToggleHandler}

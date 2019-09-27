@@ -1,25 +1,24 @@
 import React from "react";
-import "./friends.css";
+import "./Friends.css";
 
-//add friend section
-
-const Friends = () => {
+const Friends = (props) => {
     return (
         <>
-            <form>
-                <div class="form-group">
-                    <label for="">Name</label>
-                    <input type="User" class="form-control" id="" aria-describedby="" placeholder="Enter name"/>
-                    <small id="" class="form-text text-muted"></small>
-                </div>
-                <div class="form-group">
-                    <label for="">Phone Number</label>
-                    <input type="phoneNumber" class="form-control" id="" placeholder="Enter Phone Number Here"/>
-                </div>
-                <div class="form-check">  
-                    </div>
-                <button type="save" class="btn btn-primary">Save</button>
-            </form>
+            <div className="mx-3 pt-4 pb-2 mb-4 text-center header">
+                <h4>Save friends</h4>
+            </div>
+            <div className="form-group mx-3">
+                <input className="form-control" id="nickname" placeholder="Nickname"/>
+            </div>
+            <div className="form-group mx-3">
+                <input className="form-control" id="phoneNumber" placeholder="123-555-5555"/>
+            </div>
+            <div className="form-group mx-3">  
+                <button className="btn btn-primary w-100">Save</button>
+            </div>
+            <div className="py-3 mx-3 go-back" onClick={() => props.reset("Home")}>
+                Return To Menu
+            </div>
         </>
     );
 }

@@ -1,37 +1,34 @@
-//input box for your address
-//input box for city
-//input box state
-//Save button
-
 import React from "react";
-import "./destinations.css";
+import { Input } from "../Form";
 
-//Add Destination  section
-
-export function Input(props) {
+const Destinations = (props) => {
+  console.log(props)
   return (
-    <div className="form-group">
-      <input className="form-control" {...props} />
-    </div>
+    <>
+      <div className="mx-3 pt-4 pb-2 mb-4 text-center header">
+          <h4>Save Destinations</h4>
+      </div>
+      <div className="form-row mx-3">
+        <div className="col-md-12 col-xs-12 pt-2">
+          <Input placeholder="Address" />
+        </div>
+      </div>
+      <div className="form-row mx-3">
+        <div className="col">
+          <Input placeholder="City" />
+        </div>
+        <div className="col">
+          <Input placeholder="State" />
+        </div>
+      </div>
+      <div className="form-group mx-3">  
+        <button className="btn btn-primary w-100">Save</button>
+      </div>
+      <div className="py-3 mx-3 go-back" onClick={() => props.reset("Home")}>
+        Return To Menu
+      </div>
+    </>
   );
 }
-
-export function TextArea(props) {
-  return (
-    <div className="form-group">
-      <textarea className="form-control" rows="20" {...props} />
-    </div>
-  );
-}
-
-export function FormBtn(props) {
-  return (
-    <button {...props} style={{ float: "right", marginBottom: 10 }} className="btn btn-success">
-      {props.children}
-    </button>
-  );
-}
-
-    
 
 export default Destinations;
