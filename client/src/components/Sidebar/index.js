@@ -12,18 +12,25 @@ const sideBar = props => {
         <img src="/images/logo.png" width="80px" alt="Arryvl Logo" />
       </center>
     </div>
-    
-     <div className="row">
-        <div onClick={() => props.handlePageChange("/")} className={props.currentPage === "Start Trip" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
+               
+        <div className="col">
+
+            <div onClick={() => props.handlePageChange("/")} className={props.currentPage === "Start Trip" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
             Start Trip
-        </div>
-        <div onClick={() => props.handlePageChange("Friends")} className={props.currentPage === "Friends" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
+            </div>
+       
+            <div onClick={() => props.handlePageChange("Friends")} className={props.currentPage === "Friends" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
             Friends
-        </div>
-        <div onClick={() => props.handlePageChange("Destinations")} className={props.currentPage === "Destinations" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
+            </div>
+       
+            <div onClick={() => props.handlePageChange("Destinations")} className={props.currentPage === "Destinations" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
             Destinations
+            </div>
+    
         </div>
-    </div> 
+    
+      <div></div>   
+
 {/*      
     <ul>
       <div>
@@ -32,7 +39,8 @@ const sideBar = props => {
       <li><Link = "/Destinations"> Destinations </Link> </li>
     </ul>
     </div> */}
-  </nav>
+  
+    </nav>
   );
 };
 
