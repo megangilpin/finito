@@ -22,7 +22,8 @@ class Map extends React.Component {
     currentCount: 20,
     zoom: 16, // Handle initial map zoom
     center: "", // Handle map centering
-    bounds: false, // Handle map boundaries
+    bounds: false, // Handle map boundaries,
+    endTrip: 0 // stops setInterval
   }
 
   componentDidMount = () => {
@@ -33,6 +34,9 @@ class Map extends React.Component {
   }
 
   getTrip = () =>{
+    if(this.state.endTrip === 1){
+      clearInterval(this.state.interval)
+    } else {
     API.getTrip(
       this.state.trip_id
    )
@@ -46,12 +50,14 @@ class Map extends React.Component {
           destinationAddress: res.data.destinationAddress,
           destinationCoords: [{ lat: res.data.destinationCoords[0].lat, lng: res.data.destinationCoords[0].lng }],
           loading: false,
+          endTrip: this.res.data.endTrip,
           count: this.state.count + 1
         }));
         console.log(this.state.count)
         // setInterval(this.getTrip(trip_id), 5000)
       })
       .catch(err => console.log(err));
+    }
   }
 
   // Handles resetting the map center
