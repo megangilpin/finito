@@ -1,47 +1,48 @@
 import React from "react";
 import "./Sidebar.css"
+import Friends from "../Friends/Friends";
+import Destinations from "../Destinations/Destinations"
 
-const sideBar = props => {
+
+
+const Sidebar = props => {
   let drawerClasses = "side-bar";
+  
   if(props.show) {
     drawerClasses = "side-bar open";
   }
-  return ( <nav className={drawerClasses}>
-    <div className="py-4 bg-dark">
-      <center>
-        <img src="/images/logo.png" width="80px" alt="Arryvl Logo" />
-      </center>
-    </div>
-               
-        <div className="col">
-
-            <div onClick={() => props.handlePageChange("/")} className={props.currentPage === "Start Trip" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
-            Start Trip
-            </div>
-       
-            <div onClick={() => props.handlePageChange("Friends")} className={props.currentPage === "Friends" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
-            Friends
-            </div>
-       
-            <div onClick={() => props.handlePageChange("Destinations")} className={props.currentPage === "Destinations" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
-            Destinations
-            </div>
-    
+  if (props.page === "Home") {
+    return ( 
+      <nav className={drawerClasses}>
+        <div className="py-4 bg-dark">
+          <center>
+            <img src="/images/logo.png" width="80px" alt="Arryvl Logo" />
+          </center>
         </div>
-    
-      <div></div>   
-
-{/*      
-    <ul>
-      <div>
-      <li><Link = "/"> Start Trip </Link></li>
-      <li><Link = "/Friends"> Friends </Link></li>
-      <li><Link = "/Destinations"> Destinations </Link> </li>
-    </ul>
-    </div> */}
-  
-    </nav>
-  );
+        <ul>
+          <li><p href="/">Start Trip</p></li>
+          <li><p onClick={() => props.handlePageChange("Friends")}>Save Friends</p></li>
+          <li><p onClick={() => props.handlePageChange("Destinations")}>Save Destinations</p></li>
+        </ul>
+      </nav>
+    );
+  } else if (props.page === "Friends") { 
+    return ( 
+      <nav className={drawerClasses}>
+        <Friends 
+          reset={props.reset}
+        />
+      </nav> 
+    );
+  } else {
+    return ( 
+      <nav className={drawerClasses}>
+        <Destinations 
+          reset={props.reset}
+        />
+      </nav> 
+    );
+  }
 };
 
-export default sideBar;
+export default Sidebar;

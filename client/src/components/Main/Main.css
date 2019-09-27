@@ -1,19 +1,33 @@
-.logo {
-  font-family: 'Space Mono', monospace;
-  letter-spacing: 1px;
-  color: #F95738;
-};
+@media only screen and (max-width: 600px) {
+  .heading {
+    background: rgb(2,0,36);
+    height: 100vh;
+    overflow-y: hidden;
+    position: relative;
+    width: 100%; 
+  }
 
-.basic {
-  font-family: 'Montserrat', sans-serif;
-}
+  img { 
+    padding-top:40px;
+  }
 
-.main {
-  background-color: #083D77;
-  height: 500px;
-}
+  .bold { 
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400
+  }
 
-.logoIcon{
-  width: 15%;
-  height: 15%;
+  .italic { 
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    font-size: 14pt
+  }
+  
+  .get-started { 
+    background: #FF5722;
+    top: 0;
+    height: 80px;
+    line-height: 80px;
+    position: absolute; 
+    width: 100vw;
+  }
 }

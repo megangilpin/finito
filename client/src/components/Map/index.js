@@ -154,7 +154,7 @@ class Map extends React.Component {
         }
         this.setState(() => ({
           tripTime: res.data.rows[0].elements[0].duration.text,
-          src: window.location.href + "friendview/" + this.state.trip_id
+          src: window.location.href + "/friendview/" + this.state.trip_id
         }));
         this.watchPosition(this.state.trip_id, this.state.tripTime)
         if (this.state.startTextCount === 0) {
