@@ -21,7 +21,7 @@ module.exports = {
     Object.keys(address).forEach((item) => {
         geocodeAddress.push(address[item].replace(/\s/g, '+'))
     })
-    src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0] + ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=AIzaSyDzMH-vUsR-mpApqrkPqqIRpYLkWzaULFY"
+    src = `https://maps.googleapis.com/maps/api/geocode/json?address="${geocodeAddress[0]},+${geocodeAddress[1]},+${geocodeAddress[2]}&key=${key}`
     // Get location and start saving to mongo
     axios
     .get(src)

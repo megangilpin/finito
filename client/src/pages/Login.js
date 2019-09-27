@@ -23,7 +23,7 @@ class Main extends Component {
     render() {
         return (
           <>
-            <div className="centered rounded border">
+            <div className="bg-white centered rounded border">
               <div className="py-4 bg-dark">
                 <center>
                 <img src="/images/logo.png" width="100px" alt="Arryvl Logo" />
