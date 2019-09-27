@@ -3,6 +3,10 @@ import { withGoogleMap, withScriptjs } from 'react-google-maps';
 import { Col, Row, Container } from "../components/Grid";
 import Map from "../components/FriendMap"
 import FriendNav from "../components/FriendNav"
+<<<<<<< HEAD
+=======
+
+>>>>>>> da1cc488a63c75cde27f96039dd003d54b5702fa
 
 const Friendview = ({ match }) => {
   
