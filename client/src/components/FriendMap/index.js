@@ -26,7 +26,6 @@ class Map extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log(this.state.trip_id)
     this.getTrip()
     // var intervalId = setInterval(this.timer, 30000);
     var interval = setInterval(this.getTrip, 30000)
@@ -34,7 +33,6 @@ class Map extends React.Component {
   }
 
   getTrip = () =>{
-    console.log("Trip Id sent to friend:" + this.state.trip_id)
     API.getTrip(
       this.state.trip_id
    )

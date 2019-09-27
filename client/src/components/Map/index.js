@@ -146,7 +146,7 @@ class Map extends React.Component {
       },
       mode: this.state.mode
     }
-    console.log(distanceMatrixInfo.mode)
+
     API.distanceMatrix({
       distanceMatrixInfo
     })
@@ -207,7 +207,6 @@ class Map extends React.Component {
   }
 
   transportation = (type) => {
-    console.log(type)
     this.setState({mode: type})
   }
   
