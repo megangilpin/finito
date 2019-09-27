@@ -3,7 +3,7 @@ const router = require("express-promise-router")();
 
 const twilioController = require("../controllers/twilio");
 
-router.route("/text/message").post(twilioController.message); 
-router.route("/text/endmessage").post(twilioController.endmessage); 
+router.route("/text").post(twilioController.message); 
+router.route("/text/arrival").post(twilioController.arrival); 
 
 module.exports = router;

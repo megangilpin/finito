@@ -4,10 +4,7 @@ const axios = require("axios");
 
 module.exports = {
   tripURL: (req, res) => {
-    // Variables for url to send to friend
-    // comma-separated latitude/longitude coordinates
     const origin = req.body.origin;
-    // comma-separated latitude/longitude coordinates
     const destination = req.body.destination;
     // Options are driving, walking, bicycling or transit
     const transport = req.body.transport;
@@ -19,28 +16,78 @@ module.exports = {
   geocode: (req, res) => {
     const address = req.body.address
     let geocodeAddress = []
-  // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
+
+    // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
     Object.keys(address).forEach((item) => {
         geocodeAddress.push(address[item].replace(/\s/g, '+'))
     })
-    src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0] + ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=" + key
+    src = "https://maps.googleapis.com/maps/api/geocode/json?address=" + geocodeAddress[0] + ",+" + geocodeAddress[1] + ",+" + geocodeAddress[2] + "&key=AIzaSyDzMH-vUsR-mpApqrkPqqIRpYLkWzaULFY"
     // Get location and start saving to mongo
     axios
     .get(src)
-    .then(async ({ data: { results } }) => {
+    .then(async ({ data: { results } }) => { 
     let tripId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     // Create a new trip
-    const newTrip = await new db.Trip({destinationAddress: results[0].formatted_address, destinationCoords: {lat: results[0].geometry.location.lat, lng: results[0].geometry.location.lng}, tripId, userId:""})
+      const newTrip = await new db.Trip({ destinationAddress: results[0].formatted_address, destinationCoords: { lat: results[0].geometry.location.lat, lng: results[0].geometry.location.lng }, tripId, tripId, userId: req.body.address.user_id})
     await newTrip.save()
-
     // Send geolocation results up to the client so the destination can be plotted
     res.json({results,tripId})
     })
   }, 
   updateTrip: async (req, res) => { 
     await db.Trip.findOneAndUpdate(
-      {tripId: req.body.tripId}, 
-      {$addToSet: {progress: req.body.progress}, $set: {userId: req.body.userId}}
+      { tripId: req.body.tripId },
+      { $addToSet: { progress: req.body.progress }, $set: { userId: req.body.userId, tripTime: req.body.tripTime } }
     ).then(results => (console.log(results)))
+  },
+  distanceMatrix: (req, res) => {
+    let geocodeAddress = []
+    let startDestination = [req.body.distanceMatrixInfo.start.lat, req.body.distanceMatrixInfo.start.lng]
+    let mode = req.body.mode
+
+    if (req.body.distanceMatrixInfo.destination){
+    const address = req.body.destination
+      
+      // Replaces all spaces with a "+" and pushes it to the geocodeAddress array
+      Object.keys(address).forEach((item) => {
+        geocodeAddress.push(address[item].replace(/\s/g, '+'))
+      })
+
+    let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + startDestination[0] + "," + startDestination[1] + "&destinations=" + geocodeAddress[0] + ", +" + geocodeAddress[1] + ", +" + geocodeAddress[2] +"&mode=" + mode + "&key=" + key
+      axios
+        .get(src)
+        .then(({ data }) => {
+          res.json(data)
+        })
+        .catch(err => {
+          console.log(err)
+          res.status(422).json(err)
+        });
+    }
+    else if (req.body.distanceMatrixInfo.geocodeDestination) {
+
+      let geocodeDestination = [req.body.distanceMatrixInfo.geocodeDestination.lat, req.body.distanceMatrixInfo.geocodeDestination.lng]
+      let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + startDestination[0] + "," + startDestination[1] + "&destinations=" + geocodeDestination[0] + "," + geocodeDestination[1] + "&mode=" + mode + "&key=" + key
+      console.log(src)
+      axios
+        .get(src)
+        .then(({ data }) => {
+          console.log(data)
+          // Send geolocation results up to the client so the destination can be plotted
+          res.json(data)
+        })
+        .catch(err => {
+          console.log(err)
+          res.status(422).json(err)
+        });
+    }
+  },
+  getTrip: async (req, res) => {
+    db.Trip.findOne({ tripId: req.params.trip_id })
+      .then(results => {
+        console.log(results)
+        res.json(results)
+      })
+      .catch(err => console.log(err));
   }
 };

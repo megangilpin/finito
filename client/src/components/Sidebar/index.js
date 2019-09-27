@@ -1,6 +1,5 @@
 import React from "react";
-import "./Sidebar.css";
-import {Link} from "react-router-dom"
+import "./Sidebar.css"
 
 const sideBar = props => {
   let drawerClasses = "side-bar";
@@ -13,23 +12,26 @@ const sideBar = props => {
         <img src="/images/logo.png" width="80px" alt="Arryvl Logo" />
       </center>
     </div>
-    <div>
-      <Hidden smDown></Hidden>
-    </div>
-    <MenuList>
-      <MenuItem component = {Link} to="/"> Start Trip </MenuItem>
-    </MenuList>
-    <MenuList>
-      <MenuItem component = {Link} to="/Friends"> Friends </MenuItem>
-    </MenuList>
-    <MenuList>
-      <MenuItem component = {Link} to="/Destinations"> Destinations </MenuItem>
-    </MenuList>
-    {/* <ul>
-      <li><p href="/">Start Trip</p></li>
-      <li><p href="/">Friends</p></li>
-      <li><p href="/">Destinations</p></li>
-    </ul> */}
+    
+     <div className="row">
+        <div onClick={() => props.handlePageChange("/")} className={props.currentPage === "Start Trip" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
+            Start Trip
+        </div>
+        <div onClick={() => props.handlePageChange("Friends")} className={props.currentPage === "Friends" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
+            Friends
+        </div>
+        <div onClick={() => props.handlePageChange("Destinations")} className={props.currentPage === "Destinations" ? "button-color col-6 text-center py-3 boxes" : "col-6 text-center py-3 boxes"}>
+            Destinations
+        </div>
+    </div> 
+{/*      
+    <ul>
+      <div>
+      <li><Link = "/"> Start Trip </Link></li>
+      <li><Link = "/Friends"> Friends </Link></li>
+      <li><Link = "/Destinations"> Destinations </Link> </li>
+    </ul>
+    </div> */}
   </nav>
   );
 };

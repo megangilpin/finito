@@ -6,11 +6,19 @@ export default {
   getGeocode: async (address) => {
     return await axios.post("/googlemap/geocode", address);
   },
+  distanceMatrix: async (distanceMatrixInfo) => {
+    return await axios.post("/googlemap/distanceMatrix", distanceMatrixInfo )
+  },
   // Saves a trip to the database
-  updateTrip: async (tripId, progress, userId) => {
-    return await axios.post("/googlemap/updateTrip", {tripId, progress, userId});
+  updateTrip: async (tripId, progress, userId, tripTime) => {
+    return await axios.post("/googlemap/updateTrip", {tripId, progress, userId, tripTime});
   }, 
-  startTwilio: async (phone, tripURL) => {
-    return await axios.post("/notification/text", {phone, tripURL});
+  // Saves a trip to the database
+  arrivalText: async (phone) => {
+    return await axios.post("/notification/text/arrival", {phone});
+  },
+  getTrip: async (trip_id) => {
+    console.log(trip_id)
+    return await axios.get("/googlemap/getTrip/" + trip_id);
   }
 };
