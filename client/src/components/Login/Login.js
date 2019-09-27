@@ -7,7 +7,7 @@ const Login = () => {
             <div className="col">
                 <div className="row">
                     <div className="col">
-                        <label>Email:</label>
+                        <label>Email</label>
                     </div>
                 </div>
                 <div className="row">
@@ -17,7 +17,7 @@ const Login = () => {
                 </div>
                 <div className="row">
                     <div className="col">
-                        <label>Password:</label>
+                        <label>Password</label>
                     </div>
                 </div>
                 <div className="row">
