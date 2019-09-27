@@ -1,7 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col, Row } from "../Grid";
+import TransportationMethodButton from "../Transportation/Transportation";
+import Notification from "../Notification/Notification";
 import API from "../../utils/API";
+import { Input } from "../Form";
 
 
 
@@ -14,19 +18,23 @@ class Map extends React.Component {
     destinationCoords: [],
     destinationAddress: "",
     count: 0,
-    switch: false
+    switch: false,
+    currentCount: 20,
+    zoom: 16, // Handle initial map zoom
+    center: "", // Handle map centering
+    bounds: false, // Handle map boundaries
   }
 
   componentDidMount = () => {
-    console.log(this.state.trip_id)
-    this.getTrip(this.state.trip_id)
-    
+    this.getTrip()
+    // var intervalId = setInterval(this.timer, 30000);
+    var interval = setInterval(this.getTrip, 30000)
+    this.setState({ interval: interval });
   }
 
-  getTrip = (trip_id) =>{
-    console.log("Trip Id sent to friend:" + this.state.trip_id)
+  getTrip = () =>{
     API.getTrip(
-      trip_id
+      this.state.trip_id
    )
       .then(res => {
         // if (res.data.status === "error") {
@@ -46,13 +54,29 @@ class Map extends React.Component {
       .catch(err => console.log(err));
   }
 
-  callAgain = () => {
-    setTimeout(this.helper, 30000)
+  // Handles resetting the map center
+  mapCenterSetter = (coordinates, bounds) => {
+    this.setState({ center: coordinates });
+    this.map.fitBounds(bounds)
   }
 
-  helper = () => {
-    this.setState({ switch: !this.state.switch })
-    this.getTrip(this.state.trip_id)
+  // Handle the changing of map boundaries so it zooms to include the markers on the screen
+  boundsChanged = () => {
+    const google = window.google;
+    const bounds = new google.maps.LatLngBounds();
+    const start = `${this.state.progress[0].lat}, ${this.state.progress[0].lng}`
+    const end = `${this.state.destinationCoords[0].lat}, ${this.state.destinationCoords[0].lng}`
+    // Don't exend map boundaries until we know that the user has added an end destination
+    if (start !== end && this.state.bounds === false) {
+      this.setState({ bounds: true })
+      // Extend map boundaries to encompass the start and end markers
+      bounds.extend(new google.maps.LatLng(parseFloat(this.state.destinationCoords[0].lat), parseFloat(this.state.destinationCoords[0].lng)));
+      bounds.extend(new google.maps.LatLng(parseFloat(this.state.progress[0].lat), parseFloat(this.state.progress[0].lng)));
+      // Find the center of the start and end markers so the map can be repositioned
+      let centerCoordinates = { lat: bounds.getCenter().lat(), lng: bounds.getCenter().lng() }
+      // Pass the newly centered coordinates to a setter function that changes the map center state so it re-renders
+      this.mapCenterSetter(centerCoordinates, bounds);
+    }
   }
 
   render() {
@@ -64,12 +88,16 @@ class Map extends React.Component {
     }
 
     return (
-      <div>
-      {this.callAgain()}
+      <div style={{backgroundColor: "white"}}>
+       
         <Col size="md-12 xs-12">
           <GoogleMap
             defaultZoom={16}
             defaultCenter={{ lat: this.state.progress[0].lat, lng: this.state.progress[0].lng }}
+            defaultZoom={this.state.zoom}
+            center={this.state.center}
+            onBoundsChanged={this.boundsChanged}
+            ref={(ref) => { this.map = ref; }}
           >
             {this.state.progress && (
               <>
@@ -77,17 +105,21 @@ class Map extends React.Component {
                 <Polyline path={this.state.progress} options={{ strokeColor: "#FF0000 " }} />
                 {/* Set marker to last known location */}
                 <Marker position={this.state.progress[this.state.progress.length - 1]} />
-                {console.log("Destination Coords:" + this.state.destinationCoords[0].lng)}
                 <Marker position={{ lat: this.state.destinationCoords[0].lat, lng: this.state.destinationCoords[0].lng }} />
               </>
             )}
             
           </GoogleMap>
         </Col>
+        <Row>
         <Col size="md-12 xs-12">
-          <p>{this.state.tripTime}</p>
-          <p>{this.state.destinationAddress}</p>
+          <div className="text-center mt-4">
+            <p className="mb-2 mt-3"><strong>Est. Arryvl in {this.state.tripTime}</strong></p>
+            <hr className="hr-text" style={{ marginTop: 0, align: "left", width: "40%", height: "2px", backgroundColor:"#FF5722"}}></hr>
+            <p className="mb-2"><strong>Destination:</strong> {this.state.destinationAddress}</p>
+          </div>
         </Col>
+        </Row>
       </div>
     )
   }
