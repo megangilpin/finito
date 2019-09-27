@@ -9,8 +9,8 @@ function Nav(props) {
         {/* button to toggle sidebar */}
         <SidebarButton onClick={props.sidebarToggleHandler} />
 
-        {/* displays what page you are on */}
-        <a href="/" className="navbar-brand mx-auto d-block text-center w-25">{props.page}</a>
+
+        <img src="/images/logo.png" width="30px" alt="Arryvl Logo" />
 
         <button className="btn btn-light ml-1" type="button">
           <span ><i className="fas fa-cog"></i></span>

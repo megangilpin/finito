@@ -21,7 +21,6 @@ export default {
     return await axios.post("/notification/text", {phone, tripURL});
   },
   getTrip: async (trip_id) => {
-    console.log(trip_id)
-    return await axios.get("/googlemap/getTrip" + trip_id);
+    return await axios.get("/googlemap/getTrip/" + trip_id);
   }
 };
