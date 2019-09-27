@@ -22,6 +22,9 @@ const TripSchema = new Schema({
     },
     tripTime: {
         type: String
+    },
+    endTrip: {
+        type: Number
     }
   });
   

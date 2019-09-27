@@ -11,7 +11,7 @@ function App() {
       <div>
         <Switch>
           <Route exact path="/" component={Main} />
-          <Route exact path="/dashboard" component={Home} />
+          <Route exact path="/dashboard/" component={Home} />
           <Route path="/dashboard/friendview/:id" component={Friendview} />
         </Switch>
       </div>

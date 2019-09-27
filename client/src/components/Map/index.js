@@ -58,6 +58,7 @@ class Map extends React.Component {
   };
 
   watchPosition = (tripId, tripTime) => {
+    let endTrip = this.state.endTextCount
     const watch = navigator.geolocation.watchPosition(
       (position) => {
         let location = this.state.progress.concat({ lat: position.coords.latitude, lng: position.coords.longitude });
@@ -65,7 +66,7 @@ class Map extends React.Component {
         const userId = localStorage.getItem('user');
         this.setState({ progress: location, buttonDisabled: true, buttonText: "Text Sent" })
         // Save GPS updates to database so it can be reproduced for friend to track the user's whereabouts. 
-        API.updateTrip(tripId, location, userId, tripTime)
+        API.updateTrip(tripId, location, userId, tripTime, endTrip )
         this.distanceCalc(this.state.progress[this.state.progress.length-1].lat, this.state.progress[this.state.progress.length-1].lng, this.state.geocodeLocation[0].lat, this.state.geocodeLocation[0].lng)
         
         // If a text message has been sent to denote arrival, stop watching the user's position.
