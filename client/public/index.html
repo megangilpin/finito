@@ -18,27 +18,34 @@
         event.preventDefault()
       
         const register = { 
+          name: $("#registerName").val(),
           username: $("#registerUsername").val(),
-          password: $("#registerPassword").val()
+          password: $("#registerPassword").val(),
         }
+        let passwordValidator = $("#registerPasswordAgain").val()
 
-        $.post("/auth/register", register, (data) => { 
-          if (data.redirect) { 
-            localStorage.setItem('user', data.user);
-            window.location.href = data.redirect
-          } else {
-            let error = data.details[0].message
-            
-            $("#error").html("")
-            if (error === "\"username\" is not allowed to be empty" || error === "\"username\" must be a valid email") {
-              $("#error").html("Please enter a valid email address")
-            } else if (error === "\"password\" is not allowed to be empty") {
-              $("#error").html("Please enter a valid password")
-            } else { 
-              $("#error").html(error)
+        if (register.password === passwordValidator) {
+          $.post("/auth/register", register, (data) => { 
+            if (data.redirect) { 
+              localStorage.setItem('user', data.user);
+              window.location.href = data.redirect
+            } else {
+              let error = data.details[0].message
+              
+              $("#error").html("")
+              if (error === "\"username\" is not allowed to be empty" || error === "\"username\" must be a valid email") {
+                $("#error").html("Please enter a valid email address")
+              } else if (error === "\"password\" is not allowed to be empty") {
+                $("#error").html("Please enter a valid password")
+              } else { 
+                $("#error").html(error)
+              }
             }
-          }
-        })
+          })
+        } else { 
+          $("#error").html("")
+          $("#error").html("Password does not match. Try again.")
+        }
       }); 
       
       $(document).on("click", "#login", (event) => {

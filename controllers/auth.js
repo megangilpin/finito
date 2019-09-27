@@ -12,7 +12,7 @@ signToken = (user) => {
 
 module.exports = { 
     register: async (req, res, next) => {
-        const { username, password } = req.value.body; 
+        const { name, username, password } = req.value.body; 
         // Check if username exists
         const duplicateUsername =  await db.User.findOne({ username }); 
 
@@ -21,7 +21,7 @@ module.exports = {
         }
         
         // Create username
-        const newUser = new db.User({ username, password });
+        const newUser = new db.User({ name, username, password });
         await newUser.save();
 
         signToken(newUser)

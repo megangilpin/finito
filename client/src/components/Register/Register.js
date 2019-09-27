@@ -7,22 +7,42 @@ const Register = () => {
             <div className="col">
                 <div className="row">
                     <div className="col">
-                        <label>Email:</label>
+                        <label>Name</label>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col">
-                        <input className="w-100 form-control mb-2" type="text" id="registerUsername" name="username" required/>
+                        <input className="w-100 form-control mb-2" type="text" id="registerName" required/>
                         </div> 
                 </div>
                 <div className="row">
                     <div className="col">
-                        <label>Password:</label>
+                        <label>Email</label>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col">
-                        <input className="w-100 form-control" type="password" id="registerPassword" name="password" required/>
+                        <input className="w-100 form-control mb-2" type="text" id="registerUsername" required/>
+                        </div> 
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <label>Password</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <input className="w-100 form-control mb-2" type="password" id="registerPassword" required/>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <label>Confirm password</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <input className="w-100 form-control" type="password" id="registerPasswordAgain" required/>
                     </div>
                 </div>
                 <div className="mt-4">
