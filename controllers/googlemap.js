@@ -43,7 +43,8 @@ module.exports = {
   distanceMatrix: (req, res) => {
     let geocodeAddress = []
     let startDestination = [req.body.distanceMatrixInfo.start.lat, req.body.distanceMatrixInfo.start.lng]
-    let mode = req.body.mode
+    let mode = req.body.distanceMatrixInfo.mode
+    console.log(mode)
 
     if (req.body.distanceMatrixInfo.destination){
     const address = req.body.destination

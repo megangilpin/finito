@@ -23,6 +23,7 @@ class Map extends React.Component {
     tripTime: "",
     user_id: "",
     trip_id: "", 
+    mode: "",
     src: "", 
     startTextCount: 0, // Prevent initial text duplication on state changes
     endTextCount: 0, // Prevent arrival text duplication on state changes
@@ -143,8 +144,9 @@ class Map extends React.Component {
         lat: this.state.progress[0].lat,
         lng: this.state.progress[0].lng
       },
-      mode: "driving"
+      mode: this.state.mode
     }
+    console.log(distanceMatrixInfo.mode)
     API.distanceMatrix({
       distanceMatrixInfo
     })
@@ -157,6 +159,7 @@ class Map extends React.Component {
           src: window.location.href + "friendview/" + this.state.trip_id
         }));
         this.watchPosition(this.state.trip_id, this.state.tripTime)
+        console.log(this.state.src)
         if (this.state.startTextCount === 0) {
           // Notify the friend of the user's trip
           API.startTripText(this.state.phoneNumber,this.state.src)
@@ -202,6 +205,11 @@ class Map extends React.Component {
     this.mapCenterSetter(centerCoordinates, bounds);
    }
   }
+
+  transportation = (type) => {
+    console.log(type)
+    this.setState({mode: type})
+  }
   
   render() {
     const { loading, progress } = this.state; 
@@ -212,7 +220,7 @@ class Map extends React.Component {
     }
     
     return (
-      <div style={{ backgroundColor: "white"}}>
+      <div style={{ backgroundColor: "white" }}>
         <Col size="md-12 xs-12">
           <GoogleMap
             defaultZoom={this.state.zoom}
@@ -232,7 +240,7 @@ class Map extends React.Component {
           </GoogleMap>
         </Col>
         <Col size="md-12 xs-12">
-          <TransportationMethodButton />
+          <TransportationMethodButton transportationType={this.transportation}/>
           <form>
             <div className="row">
               <div className="col">

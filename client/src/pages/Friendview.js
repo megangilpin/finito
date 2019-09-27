@@ -2,14 +2,14 @@ import React from 'react';
 import { withGoogleMap, withScriptjs } from 'react-google-maps';
 import { Col, Row, Container } from "../components/Grid";
 import Map from "../components/FriendMap"
-// import Destinations from "./Destinations"
-
+import FriendNav from "../components/FriendNav"
 
 const Friendview = ({ match }) => {
   
   const MapComponent = withScriptjs(withGoogleMap(Map))
   return (
     <div style={{ height: "100%" }}>
+      <FriendNav />
       <Container >
         <Row>
           <Col size="md-12 xs-12">
@@ -22,7 +22,6 @@ const Friendview = ({ match }) => {
               mapElement={<div style={{ height: `100%` }} />}
             />
           </Col>
-          {/* <Destinations /> */}
         </Row>
       </Container>
     </div>
