@@ -2,7 +2,7 @@ import React from "react";
 import { Input } from "../Form";
 
 const Destinations = (props) => {
-  console.log(props)
+  
   return (
     <>
       <div className="mx-3 pt-4 pb-2 mb-4 text-center header">
