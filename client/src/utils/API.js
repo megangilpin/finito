@@ -10,8 +10,8 @@ export default {
     return await axios.post("/googlemap/distanceMatrix", distanceMatrixInfo)
   },
   // Saves a trip to the database
-  updateTrip: async (tripId, progress, userId, tripTime, endTrip) => {
-    return await axios.post("/googlemap/updateTrip", { tripId, progress, userId, tripTime, endTrip });
+  updateTrip: async (tripId, progress, userId, tripTime, endTrip, userName) => {
+    return await axios.post("/googlemap/updateTrip", { tripId, progress, userId, tripTime, endTrip, userName });
   },
   // Saves a trip to the database
   arrivalText: async (phone) => {

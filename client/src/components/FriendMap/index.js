@@ -2,6 +2,8 @@ import React from 'react';
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col, Row } from "../Grid";
 import API from "../../utils/API";
+import "./Map.css"
+
 
 
 
@@ -20,7 +22,8 @@ class Map extends React.Component {
     zoom: 16, // Handle initial map zoom
     center: "", // Handle map centering
     bounds: false, // Handle map boundaries,
-    endTrip: "" // stops setInterval
+    endTrip: "",
+    userName: "", // stops setInterval
   }
 
   componentDidMount = () => {
@@ -38,9 +41,7 @@ class Map extends React.Component {
       this.state.trip_id
    )
       .then(res => {
-        // if (res.data.status === "error") {
-        //   throw new Error(res.data.message);
-        // }
+        
         this.setState(() => ({
           progress: res.data.progress,
           tripTime: res.data.tripTime,
@@ -48,7 +49,8 @@ class Map extends React.Component {
           destinationCoords: [{ lat: res.data.destinationCoords[0].lat, lng: res.data.destinationCoords[0].lng }],
           loading: false,
           endTrip: res.data.endTrip,
-          count: this.state.count + 1
+          count: this.state.count + 1,
+          userName: res.data.userName
         }));
         console.log(this.state.count)
         if(this.state.endTrip === 1){
@@ -85,7 +87,7 @@ class Map extends React.Component {
   }
 
   render() {
-    const { loading, progress } = this.state;
+    const { loading } = this.state;
 
     // Check if we have a position, if not, do not load map
     if (loading) {
@@ -94,7 +96,6 @@ class Map extends React.Component {
 
     return (
       <div style={{backgroundColor: "white"}}>
-       
         <Col size="md-12 xs-12">
           <GoogleMap
             defaultZoom={16}
@@ -119,9 +120,11 @@ class Map extends React.Component {
         <Row>
         <Col size="md-12 xs-12">
           <div className="text-center mt-4">
-            <p className="mb-2 mt-3"><strong>Est. Arryvl in {this.state.tripTime}</strong></p>
+            <p className="mb-2 mt-3"><strong>{this.state.userName} is en route to: </strong></p>
+              <p className="mb-2">{this.state.destinationAddress}</p>
             <hr className="hr-text" style={{ marginTop: 0, align: "left", width: "40%", height: "2px", backgroundColor:"#FF5722"}}></hr>
-            <p className="mb-2"><strong>Destination:</strong> {this.state.destinationAddress}</p>
+              <p className="mb-2 mt-3"><strong>Est. Arryvl in {this.state.tripTime}</strong></p>
+            
           </div>
         </Col>
         </Row>
