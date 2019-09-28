@@ -88,5 +88,12 @@ module.exports = {
         res.json(results)
       })
       .catch(err => console.log(err));
+  },
+  getUser: async (req, res) => {
+    db.User.findOne({_id: req.body.userId})
+    .then(results => {
+      console.log(results)
+      res.json(results)
+    })
   }
 };

@@ -1,11 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col, Row } from "../Grid";
-import TransportationMethodButton from "../Transportation/Transportation";
-import Notification from "../Notification/Notification";
 import API from "../../utils/API";
-import { Input } from "../Form";
+
 
 
 
@@ -23,7 +20,7 @@ class Map extends React.Component {
     zoom: 16, // Handle initial map zoom
     center: "", // Handle map centering
     bounds: false, // Handle map boundaries,
-    endTrip: 0 // stops setInterval
+    endTrip: "" // stops setInterval
   }
 
   componentDidMount = () => {
@@ -50,11 +47,13 @@ class Map extends React.Component {
           destinationAddress: res.data.destinationAddress,
           destinationCoords: [{ lat: res.data.destinationCoords[0].lat, lng: res.data.destinationCoords[0].lng }],
           loading: false,
-          endTrip: this.res.data.endTrip,
+          endTrip: res.data.endTrip,
           count: this.state.count + 1
         }));
         console.log(this.state.count)
-        // setInterval(this.getTrip(trip_id), 5000)
+        if(this.state.endTrip === 1){
+          clearInterval(this.state.intervalId);
+        }
       })
       .catch(err => console.log(err));
     }
