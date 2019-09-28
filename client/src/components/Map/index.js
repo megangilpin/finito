@@ -180,7 +180,7 @@ class Map extends React.Component {
 
   componentDidMount = () => {
     this.initialLocation()
-
+    this.getUser()
   };
 
   // Handle the changing of map boundaries so it zooms to include the markers on the screen
@@ -203,9 +203,9 @@ class Map extends React.Component {
   }
 
   getUser = async () => {
-    console.log("userid" + this.state.userId)
+    console.log("userid" + localStorage.getItem('user'))
     await API.getUser(
-      this.state.userId
+      localStorage.getItem('user')
     )
       .then(res => {
         this.setState({ friendName: res.data.name })

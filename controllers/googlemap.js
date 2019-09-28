@@ -90,6 +90,7 @@ module.exports = {
       .catch(err => console.log(err));
   },
   getUser: async (req, res) => {
+    console.log(req.body.userId)
     db.User.findOne({_id: req.body.userId})
     .then(results => {
       console.log(results)
