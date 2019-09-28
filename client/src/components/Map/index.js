@@ -87,8 +87,8 @@ class Map extends React.Component {
       dist = Math.acos(dist);
       dist = dist * 180/Math.PI;
       dist = dist * 60 * 1.1515;
-      if (dist <= .01) { 
-        // If the user is less then .01 miles from the destination point trigger text message to friend
+      if (dist <= .02) { 
+        // If the user is less then .02 miles from the destination point trigger text message to friend
         if (this.state.endTextCount === 0) {
           API.arrivalText(this.state.phoneNumber)
           this.setState({endTextCount: this.state.endTextCount + 1})
