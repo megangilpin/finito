@@ -5,7 +5,7 @@ import Map from "../components/FriendMap"
 import FriendNav from "../components/FriendNav"
 
 const Friendview = ({ match }) => {
-  
+
   const MapComponent = withScriptjs(withGoogleMap(Map))
   return (
     <div style={{ height: "100%" }}>
@@ -16,7 +16,8 @@ const Friendview = ({ match }) => {
             <MapComponent 
               
               trip_id={match.params.id}
-              googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+              googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAaij2cgK-ms54TahnpozaGjOSzX2m4miA`}
+              
               loadingElement={<div style={{ height: `100%` }} />}
               containerElement={<div style={{ height: `100%`, width: '100%' }} />}
               mapElement={<div style={{ height: `100%` }} />}

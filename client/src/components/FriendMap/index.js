@@ -1,13 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col, Row } from "../Grid";
-import TransportationMethodButton from "../Transportation/Transportation";
-import Notification from "../Notification/Notification";
 import API from "../../utils/API";
-import { Input } from "../Form";
-
-
+import "./Map.css"
 
 class Map extends React.Component {
   state = {
@@ -20,10 +15,11 @@ class Map extends React.Component {
     count: 0,
     switch: false,
     currentCount: 20,
-    zoom: 16, // Handle initial map zoom
+    friendZoom: 16, // Handle initial map zoom
     center: "", // Handle map centering
     bounds: false, // Handle map boundaries,
-    endTrip: 0 // stops setInterval
+    endTrip: "",
+    userName: "", // stops setInterval
   }
 
   componentDidMount = () => {
@@ -41,20 +37,20 @@ class Map extends React.Component {
       this.state.trip_id
    )
       .then(res => {
-        // if (res.data.status === "error") {
-        //   throw new Error(res.data.message);
-        // }
+        
         this.setState(() => ({
           progress: res.data.progress,
           tripTime: res.data.tripTime,
           destinationAddress: res.data.destinationAddress,
           destinationCoords: [{ lat: res.data.destinationCoords[0].lat, lng: res.data.destinationCoords[0].lng }],
           loading: false,
-          endTrip: this.res.data.endTrip,
-          count: this.state.count + 1
+          endTrip: res.data.endTrip,
+          count: this.state.count + 1,
+          userName: res.data.userName
         }));
-        console.log(this.state.count)
-        // setInterval(this.getTrip(trip_id), 5000)
+        if(this.state.endTrip === 1){
+          clearInterval(this.state.intervalId);
+        }
       })
       .catch(err => console.log(err));
     }
@@ -86,7 +82,7 @@ class Map extends React.Component {
   }
 
   render() {
-    const { loading, progress } = this.state;
+    const { loading } = this.state;
 
     // Check if we have a position, if not, do not load map
     if (loading) {
@@ -95,12 +91,11 @@ class Map extends React.Component {
 
     return (
       <div style={{backgroundColor: "white"}}>
-       
         <Col size="md-12 xs-12">
           <GoogleMap
             defaultZoom={16}
             defaultCenter={{ lat: this.state.progress[0].lat, lng: this.state.progress[0].lng }}
-            defaultZoom={this.state.zoom}
+            defaultZoom={this.state.friendZoom}
             center={this.state.center}
             onBoundsChanged={this.boundsChanged}
             ref={(ref) => { this.map = ref; }}
@@ -120,9 +115,11 @@ class Map extends React.Component {
         <Row>
         <Col size="md-12 xs-12">
           <div className="text-center mt-4">
-            <p className="mb-2 mt-3"><strong>Est. Arryvl in {this.state.tripTime}</strong></p>
+            <p className="mb-2 mt-3"><strong>{this.state.userName} is en route to: </strong></p>
+              <p className="mb-2">{this.state.destinationAddress}</p>
             <hr className="hr-text" style={{ marginTop: 0, align: "left", width: "40%", height: "2px", backgroundColor:"#FF5722"}}></hr>
-            <p className="mb-2"><strong>Destination:</strong> {this.state.destinationAddress}</p>
+              <p className="mb-2 mt-3"><strong>Est. Arryvl in {this.state.tripTime}</strong></p>
+            
           </div>
         </Col>
         </Row>

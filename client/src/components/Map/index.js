@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col } from "../Grid";
 import TransportationMethodButton from "../Transportation/Transportation";
@@ -22,7 +21,8 @@ class Map extends React.Component {
     bounds: false, // Handle map boundaries
     tripTime: "",
     user_id: "",
-    trip_id: "", 
+    trip_id: "",
+    userName: "",
     mode: "",
     src: "", 
     startTextCount: 0, // Prevent initial text duplication on state changes
@@ -51,22 +51,16 @@ class Map extends React.Component {
     }); 
   };
  
-  getUserID = () =>{
-    this.setState(() => ({
-      user_id: localStorage.getItem('user')
-    }));
-  };
-
   watchPosition = (tripId, tripTime) => {
     let endTrip = this.state.endTextCount
+    let userName = this.state.userName
     const watch = navigator.geolocation.watchPosition(
       (position) => {
         let location = this.state.progress.concat({ lat: position.coords.latitude, lng: position.coords.longitude });
-        console.log(location)
         const userId = localStorage.getItem('user');
         this.setState({ progress: location, buttonDisabled: true, buttonText: "Text Sent" })
         // Save GPS updates to database so it can be reproduced for friend to track the user's whereabouts. 
-        API.updateTrip(tripId, location, userId, tripTime, endTrip )
+        API.updateTrip(tripId, location, userId, tripTime, endTrip, userName )
         this.distanceCalc(this.state.progress[this.state.progress.length-1].lat, this.state.progress[this.state.progress.length-1].lng, this.state.geocodeLocation[0].lat, this.state.geocodeLocation[0].lng)
         
         // If a text message has been sent to denote arrival, stop watching the user's position.
@@ -93,8 +87,8 @@ class Map extends React.Component {
       dist = Math.acos(dist);
       dist = dist * 180/Math.PI;
       dist = dist * 60 * 1.1515;
-      if (dist <= .06) { 
-        // If the user is less then .03 miles from the destination point trigger text message to friend
+      if (dist <= .01) { 
+        // If the user is less then .01 miles from the destination point trigger text message to friend
         if (this.state.endTextCount === 0) {
           API.arrivalText(this.state.phoneNumber)
           this.setState({endTextCount: this.state.endTextCount + 1})
@@ -106,10 +100,10 @@ class Map extends React.Component {
   // Gets the Lat and Long from the google API for the user's end destination
   getGeocode = () => {
     let address = {
-      user_id: this.state.user_id,
+      user_id: localStorage.getItem('user'),
       address: this.state.searchAddress.trim(),
       city: this.state.searchCity.trim(),
-      state: this.state.st.trim()
+      state: this.state.st.trim(),
     }
     API.getGeocode({
       address
@@ -157,7 +151,7 @@ class Map extends React.Component {
         }
         this.setState(() => ({
           tripTime: res.data.rows[0].elements[0].duration.text,
-          src: window.location.href + "friendview/" + this.state.trip_id
+          src: window.location.href + "/friendview/" + this.state.trip_id
         }));
         this.watchPosition(this.state.trip_id, this.state.tripTime)
         console.log(this.state.src)
@@ -186,6 +180,7 @@ class Map extends React.Component {
 
   componentDidMount = () => {
     this.initialLocation()
+    this.getUser()
   };
 
   // Handle the changing of map boundaries so it zooms to include the markers on the screen
@@ -205,6 +200,16 @@ class Map extends React.Component {
     // Pass the newly centered coordinates to a setter function that changes the map center state so it re-renders
     this.mapCenterSetter(centerCoordinates, bounds);
    }
+  }
+
+  getUser = async () => {
+    await API.getUser(
+      localStorage.getItem('user')
+    )
+      .then(res => {
+        this.setState({ userName: res.data.name })
+      })
+      .catch(err => console.log(err));
   }
 
   transportation = (type) => {

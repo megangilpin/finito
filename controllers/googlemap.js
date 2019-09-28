@@ -37,7 +37,7 @@ module.exports = {
   updateTrip: async (req, res) => { 
     await db.Trip.findOneAndUpdate(
       { tripId: req.body.tripId },
-      { $addToSet: { progress: req.body.progress }, $set: { userId: req.body.userId, tripTime: req.body.tripTime, endTrip: req.body.endTrip } }
+      { $addToSet: { progress: req.body.progress }, $set: { userId: req.body.userId, tripTime: req.body.tripTime, endTrip: req.body.endTrip, userName: req.body.userName } }
     ).then(results => (console.log(results)))
   },
   distanceMatrix: (req, res) => {
@@ -67,11 +67,11 @@ module.exports = {
 
       let geocodeDestination = [req.body.distanceMatrixInfo.geocodeDestination.lat, req.body.distanceMatrixInfo.geocodeDestination.lng]
       let src = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + startDestination[0] + "," + startDestination[1] + "&destinations=" + geocodeDestination[0] + "," + geocodeDestination[1] + "&mode=" + mode + "&key=" + key
-      console.log(src)
+
       axios
         .get(src)
         .then(({ data }) => {
-          console.log(data)
+
           // Send geolocation results up to the client so the destination can be plotted
           res.json(data)
         })
@@ -88,5 +88,11 @@ module.exports = {
         res.json(results)
       })
       .catch(err => console.log(err));
+  },
+  getUser: async (req, res) => {
+    db.User.findOne({_id: req.body.userId})
+    .then(results => {
+      res.json(results)
+    })
   }
 };

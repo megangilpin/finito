@@ -25,6 +25,9 @@ const TripSchema = new Schema({
     },
     endTrip: {
         type: Number
+    },
+    userName: {
+        type: String
     }
   });
   

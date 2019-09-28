@@ -6,7 +6,7 @@ import Tabs from "./Sidebar"
 
 const Home = () => {
     const MapComponent = withScriptjs(withGoogleMap(Map))
-    const mapURL = `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places`
+  const mapURL = `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAaij2cgK-ms54TahnpozaGjOSzX2m4miA`
 
     return (
         <div style={{height: "100%"}}>
