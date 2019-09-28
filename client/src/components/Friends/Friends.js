@@ -2,7 +2,6 @@ import React from "react";
 import "./Friends.css";
 
 const Friends = (props) => {
-    console.log(props)
     return (
         <>
             <div className="mx-3 pt-4 pb-2 mb-4 text-center header">
