@@ -4,10 +4,6 @@ import { Col, Row } from "../Grid";
 import API from "../../utils/API";
 import "./Map.css"
 
-
-
-
-
 class Map extends React.Component {
   state = {
     progress: [],
