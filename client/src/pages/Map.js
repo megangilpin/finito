@@ -3,8 +3,6 @@ import { withGoogleMap, withScriptjs } from 'react-google-maps';
 import { Col, Row, Container} from "../components/Grid";
 import Map from "../components/Map"
 import Tabs from "./Sidebar"
-// import Destinations from "./Destinations"
-
 
 const Home = () => {
     const MapComponent = withScriptjs(withGoogleMap(Map))
@@ -23,7 +21,6 @@ const Home = () => {
                 mapElement={<div style={{ height: `100%` }} />}
               />
             </Col>
-            {/* <Destinations /> */}
           </Row>
         </Container>
         </div>

@@ -29,5 +29,4 @@ const Friendview = ({ match }) => {
   )
 }
 
-
 export default Friendview
