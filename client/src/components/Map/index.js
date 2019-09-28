@@ -51,12 +51,6 @@ class Map extends React.Component {
     }); 
   };
  
-  getUserID = () =>{
-    this.setState(() => ({
-      user_id: localStorage.getItem('user')
-    }));
-  };
-
   watchPosition = (tripId, tripTime) => {
     let endTrip = this.state.endTextCount
     const watch = navigator.geolocation.watchPosition(
@@ -157,7 +151,7 @@ class Map extends React.Component {
         }
         this.setState(() => ({
           tripTime: res.data.rows[0].elements[0].duration.text,
-          src: window.location.href + "friendview/" + this.state.trip_id
+          src: window.location.href + "/friendview/" + this.state.trip_id
         }));
         this.watchPosition(this.state.trip_id, this.state.tripTime)
         console.log(this.state.src)
@@ -186,6 +180,7 @@ class Map extends React.Component {
 
   componentDidMount = () => {
     this.initialLocation()
+
   };
 
   // Handle the changing of map boundaries so it zooms to include the markers on the screen
