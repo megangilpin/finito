@@ -202,6 +202,18 @@ class Map extends React.Component {
    }
   }
 
+  getUser = async () => {
+    console.log("userid" + this.state.userId)
+    await API.getUser(
+      this.state.userId
+    )
+      .then(res => {
+        this.setState({ friendName: res.data.name })
+        console.log(this.state.friendName)
+      })
+      .catch(err => console.log(err));
+  }
+
   transportation = (type) => {
     this.setState({mode: type})
   }
