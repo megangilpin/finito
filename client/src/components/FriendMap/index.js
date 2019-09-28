@@ -25,7 +25,7 @@ class Map extends React.Component {
   componentDidMount = () => {
     this.getTrip()
     // var intervalId = setInterval(this.timer, 30000);
-    var interval = setInterval(this.getTrip, 30000)
+    var interval = setInterval(this.getTrip, 5000)
     this.setState({ interval: interval });
   }
 
