@@ -106,7 +106,7 @@ class Map extends React.Component {
   // Gets the Lat and Long from the google API for the user's end destination
   getGeocode = () => {
     let address = {
-      user_id: this.state.user_id,
+      user_id: localStorage.getItem('user'),
       address: this.state.searchAddress.trim(),
       city: this.state.searchCity.trim(),
       state: this.state.st.trim()
