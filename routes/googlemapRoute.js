@@ -7,5 +7,6 @@ router.route("/geocode").post(googlemapController.geocode);
 router.route("/distanceMatrix").post(googlemapController.distanceMatrix);
 router.route("/updateTrip").post(googlemapController.updateTrip);
 router.route("/getTrip/:trip_id").get(googlemapController.getTrip);
+router.route("/getUser/").post(googlemapController.getUser);
 
 module.exports = router;
