@@ -4,10 +4,6 @@ import { Col, Row } from "../Grid";
 import API from "../../utils/API";
 import "./Map.css"
 
-
-
-
-
 class Map extends React.Component {
   state = {
     progress: [],
@@ -19,7 +15,7 @@ class Map extends React.Component {
     count: 0,
     switch: false,
     currentCount: 20,
-    zoom: 16, // Handle initial map zoom
+    friendZoom: 16, // Handle initial map zoom
     center: "", // Handle map centering
     bounds: false, // Handle map boundaries,
     endTrip: "",
@@ -52,7 +48,6 @@ class Map extends React.Component {
           count: this.state.count + 1,
           userName: res.data.userName
         }));
-        console.log(this.state.count)
         if(this.state.endTrip === 1){
           clearInterval(this.state.intervalId);
         }
@@ -100,7 +95,7 @@ class Map extends React.Component {
           <GoogleMap
             defaultZoom={16}
             defaultCenter={{ lat: this.state.progress[0].lat, lng: this.state.progress[0].lng }}
-            defaultZoom={this.state.zoom}
+            defaultZoom={this.state.friendZoom}
             center={this.state.center}
             onBoundsChanged={this.boundsChanged}
             ref={(ref) => { this.map = ref; }}

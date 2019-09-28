@@ -15,7 +15,6 @@ module.exports = {
   },
   geocode: (req, res) => {
     const address = req.body.address
-    console.log(req.body.address.userName)
     let geocodeAddress = []
 
     // Replaces all spaces with a "+" and pushes it to the geocodeAddress array

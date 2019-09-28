@@ -24,7 +24,6 @@ export default {
     return await axios.get("/googlemap/getTrip/" + trip_id);
   },
   getUser: async (userId) => {
-    console.log("userid: " + userId)
     return await axios.post("/googlemap/getUser", { userId });
   }
 };

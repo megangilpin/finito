@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
 import { GoogleMap, Polyline, Marker } from 'react-google-maps';
 import { Col } from "../Grid";
 import TransportationMethodButton from "../Transportation/Transportation";
@@ -58,7 +57,6 @@ class Map extends React.Component {
     const watch = navigator.geolocation.watchPosition(
       (position) => {
         let location = this.state.progress.concat({ lat: position.coords.latitude, lng: position.coords.longitude });
-        console.log(location)
         const userId = localStorage.getItem('user');
         this.setState({ progress: location, buttonDisabled: true, buttonText: "Text Sent" })
         // Save GPS updates to database so it can be reproduced for friend to track the user's whereabouts. 
@@ -205,13 +203,11 @@ class Map extends React.Component {
   }
 
   getUser = async () => {
-    console.log("userid" + localStorage.getItem('user'))
     await API.getUser(
       localStorage.getItem('user')
     )
       .then(res => {
         this.setState({ userName: res.data.name })
-        console.log(this.state.userName)
       })
       .catch(err => console.log(err));
   }
