@@ -1,2 +1,2 @@
 # Arryvl
-An app to share you location with friends 
+An app to share your location with friends 
