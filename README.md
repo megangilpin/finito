@@ -12,12 +12,20 @@ Arryvl is an application that, with a click of a button, will track your locatio
   1. Upon reaching destination app automatically texts friend to alert them you've made it to your destination
 
 ## Built With
-* Firebase
+* Node 
+* Mongo DB
+* Mongoose
+* React.js
+* Google Maps API
+* Twilio API
+* npm packages
+  * React-google-maps
+  * Passport auth
+  * React-router-dom
 * HTML5
 * CSS
 * jQUERY
 * Javascript 
-* API/AJAX 
 * Bootstarp
 
 ## Authors
