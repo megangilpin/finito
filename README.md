@@ -20,4 +20,7 @@ Arryvl is an application that, with a click of a button, will track your locatio
 * API/AJAX 
 * Bootstarp
 
-
+## Authors
+* **Ryan Brown** - web developer - [Ryan Brown](https://github.com/ryancbrown)
+* **Megan Gilpin** - web developer - [Megan Gilpin](https://github.com/megangilpin)
+* **Percy A** - web developer [Percy A](https://github.com/Baldy318)
