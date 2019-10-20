@@ -1,6 +1,8 @@
 # Arryvl :world_map:
 https://arryvl.herokuapp.com/
 
+![Arryvl Demo](demo/arryvl.gif)
+
 ### Overview
 
 Arryvl is an application that, with a click of a button, will track your location and share it with a friend. Arryvl maps your route as you head to your destination and informs those that care about you once you have arrived. 
