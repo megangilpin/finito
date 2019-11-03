@@ -17,7 +17,7 @@
 @media only screen and (max-width: 600px) {
   .centered {
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
     width: 100%; 
   }
 }
