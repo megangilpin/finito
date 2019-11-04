@@ -37,6 +37,7 @@ class Map extends React.Component {
       this.state.trip_id
    )
       .then(res => {
+         console.log(res.data.progress);
         
         this.setState(() => ({
           progress: res.data.progress,
