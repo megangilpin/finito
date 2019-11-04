@@ -93,11 +93,10 @@ class Map extends React.Component {
       <div style={{backgroundColor: "white"}}>
         <Col size="md-12 xs-12">
           <GoogleMap
-            defaultCenter={{ lat: this.state.progress[0].lat, lng: this.state.progress[0].lng }}
-            defaultZoom={this.state.friendZoom}
+            defaultZoom={this.state.zoom}
             onBoundsChanged={this.boundsChanged}
             ref={(ref) => { this.map = ref; }}
-          >
+          > 
             {this.state.progress && (
               <>
                 {/* Set path */}
