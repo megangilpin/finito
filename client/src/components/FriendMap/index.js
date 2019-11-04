@@ -94,6 +94,7 @@ class Map extends React.Component {
         <Col size="md-12 xs-12">
           <GoogleMap
             defaultZoom={this.state.zoom}
+            center={this.state.center}
             onBoundsChanged={this.boundsChanged}
             ref={(ref) => { this.map = ref; }}
           > 
